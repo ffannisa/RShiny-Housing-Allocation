@@ -1,0 +1,8 @@
+inputs:
+registerButton
+registerUsername
+registerPassword
+registerPasswordReentry
+
+outputs:
+registerError: String
