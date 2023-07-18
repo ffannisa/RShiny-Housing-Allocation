@@ -3,3 +3,4 @@ checkExistingUsername<- function (username){
   # check if this username is already in use
   # return TRUE or FALSE
 }
+#add user
