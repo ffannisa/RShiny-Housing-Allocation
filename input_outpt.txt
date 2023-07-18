@@ -2,7 +2,7 @@ inputs:
 registerButton
 registerUsername
 registerPassword
-registerPasswordReentry
+registerPasswordConfirmation
 
 outputs:
 registerError: String
