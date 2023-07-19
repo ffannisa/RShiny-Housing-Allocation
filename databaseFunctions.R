@@ -19,3 +19,13 @@ login<-function(username,password){
   # return either "success" or string with error message
 }
 
+
+findLatestStatistics<- function(username){
+  # finds the latest game data for the username: year, happiness, budget, population, homelessness, employment
+  # return data.frame with columns: year, happiness, budget, population, homelessness, employment
+}
+
+findLandUse<- function(username){
+  # finds the land use for the username and puts it into a dataframe
+  # return data.frame with columns: grid_number, type, remaining_lease
+}
