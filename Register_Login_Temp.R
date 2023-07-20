@@ -17,7 +17,6 @@ passwordModal <- function(failed = FALSE) {
     textInput("playername", "Enter your desired Player Name:"),
     passwordInput("password1", "Enter a new password:"),
     passwordInput("password2", "Confirm by re-entering the new password:"),
-    "If successful, you will be assigned a Player Name to go with this password.",
     if (failed)
       div(tags$b("The passwords do not match. Try again.", style = "color: red;")),
     
