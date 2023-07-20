@@ -1,4 +1,6 @@
+
 library(stringr)
+library(RMySQL)
 
 #References
 #https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
@@ -67,7 +69,6 @@ getAWSConnection <- function(){
 
 
 getPlayerID <- function(playername,password){
-
   #open the connection
   conn <- getAWSConnection()
   #password could contain an SQL insertion attack
