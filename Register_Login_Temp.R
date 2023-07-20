@@ -60,10 +60,10 @@ loginModal <- function(failed = FALSE) {
 getAWSConnection <- function(){
   conn <- dbConnect(
     drv = RMySQL::MySQL(),
-    dbname = "student065",
+    dbname = "student098",
     host = "database-1.ceo4ehzjeeg0.ap-southeast-1.rds.amazonaws.com",
     username = "student065",
-    password = "dYUQMnMv73+H")
+    password = "C4Z!RZuJfRq5")
   conn
 }
 
@@ -73,8 +73,8 @@ getPlayerID <- function(playername,password){
   conn <- getAWSConnection()
   #password could contain an SQL insertion attack
   #Create a template for the query with placeholders for playername and password
-  querytemplate <- "SELECT * FROM LeaderPlayer WHERE playername=?id1 AND password=?id2;"
-  query<- sqlInterpolate(conn, querytemplate,id1=playername,id2=password)
+  querytemplate <- "SELECT * FROM player WHERE username=?id1 AND password=?id2;"
+  query<- sqlInterpolate(conn, querytemplate,id1=username,id2=password)
   print(query) #for debug
   result <- dbGetQuery(conn,query)
   # If the query is successful, result should be a dataframe with one row
@@ -102,18 +102,18 @@ getRandomPlayerName <- function(conn){
   playername
 }
 
-createNewPlayerQuery <- function(conn,playername,password){
+createNewPlayerQuery <- function(conn,username,password){
   #password could contain an SQL insertion attack
   #Create a template for the query with placeholder for  password
-  querytemplate <- "INSERT INTO LeaderPlayer (playername,password) VALUES (?id1,?id2);"
-  query<- sqlInterpolate(conn, querytemplate,id1=playername,id2=password)
+  querytemplate <- "INSERT INTO player (username,password) VALUES (?id1,?id2);"
+  query<- sqlInterpolate(conn, querytemplate,id1=username,id2=password)
 }
 
 registerPlayer <- function(password){
   #open the connection
   conn <- getAWSConnection()
   playername <- getRandomPlayerName(conn)
-  query <- createNewPlayerQuery(conn,playername,password)
+  query <- createNewPlayerQuery(conn,username,password)
   print(query) #for debug
   # This query could fail to run properly so we wrap it in a loop with tryCatch()
   success <- FALSE
