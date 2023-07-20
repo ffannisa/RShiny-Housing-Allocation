@@ -148,15 +148,23 @@ registerPlayer <- function(password){
 ui <- fluidPage(
   
   # Add the game title "Housing Hustlers" at the top
-  tags$h1("Housing Hustlers", style = "text-align: center;"),
+  tags$h1("Housing Hustlers"),
+  
+  # Add font and Game design template to use -> Nes.css
+  # Link the external CSS file and fonts
+  tags$head(
+    tags$link(href = "https://unpkg.com/nes.css@2.3.0/css/nes.min.css", rel = "stylesheet"),
+    tags$link(href = "https://fonts.googleapis.com/css?family=Press+Start+2P", rel = "stylesheet")
+  ),
   
   # Link the external CSS file
   includeCSS("Login_style.css"),
   
   #Add buttons for Register and Login
   div(class = "btn-align",
-  actionButton("register", "New Player"),
-  actionButton("login", "Returning Player")),
+  
+  actionButton("register", tags$button(type = "button", class = "nes-btn is-primary", "New Player")),
+  actionButton("login", tags$button(type = "button", class = "nes-btn is-primary", "Returning Player"))),
   # Add the loggedInAs div and center its content
   div(id = "loggedInAsWrapper",
       htmlOutput("loggedInAs")
