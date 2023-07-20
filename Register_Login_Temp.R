@@ -147,6 +147,9 @@ registerPlayer <- function(password){
 
 ui <- fluidPage(
   
+  # Add the game title "Housing Hustlers" at the top
+  tags$h1("Housing Hustlers", style = "text-align: center;"),
+  
   # Link the external CSS file
   includeCSS("Login_style.css"),
   
