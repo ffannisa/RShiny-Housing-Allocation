@@ -165,9 +165,9 @@ ui <- fluidPage(
   
   # Add buttons for Register and Login
   div(class = "btn-align",
-      actionButton("register", tags$button(type = "button", class = "nes-btn is-primary", "New Player")),
-      actionButton("login", tags$button(type = "button", class = "nes-btn is-primary", "Returning Player"))
-  ),
+      actionButton("register", label = "New Player", class = "nes-btn is-primary"),    
+      # Returning Player button
+      actionButton("login", label = "Returning Player", class = "nes-btn is-primary")),
   
   # Add some spacing
   tags$br(),
