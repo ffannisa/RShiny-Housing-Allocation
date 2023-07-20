@@ -157,7 +157,10 @@ ui <- fluidPage(
   div(class = "btn-align",
   actionButton("register", "New Player"),
   actionButton("login", "Returning Player")),
-  htmlOutput("loggedInAs"),
+  # Add the loggedInAs div and center its content
+  div(id = "loggedInAsWrapper",
+      htmlOutput("loggedInAs")
+  )
   
 )
 

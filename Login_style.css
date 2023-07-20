@@ -10,3 +10,11 @@
 .btn-align button {
   margin: 5px; /* Adjust this value to control the space between buttons */
 }
+
+/* Center the loggedInAs div */
+#loggedInAsWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
