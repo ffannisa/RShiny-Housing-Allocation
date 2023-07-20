@@ -1,0 +1,12 @@
+/* Custom styles for buttons */
+.btn-align {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 200px; /* Adjust this value to move the buttons lower or higher */
+}
+
+/* Add space between buttons */
+.btn-align button {
+  margin: 5px; /* Adjust this value to control the space between buttons */
+}
