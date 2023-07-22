@@ -20,9 +20,12 @@ gameCalc<-function(input,output,session){
         }else{
           values$username<-username
           # insert function to change to game screen with default game data
+          
         }
       }
     }
+    print(values$username)
+    print(output$registerError)
   })
   
   #USE CASE 2 LOGIN
@@ -42,7 +45,10 @@ gameCalc<-function(input,output,session){
         values$current_statistics<-findLatestStatistics(values$username)
         values$land_use<-findLandUse(values$username)
         # insert function to change to game screen
+        
       }
     }
+    print(values$username)
+    print(output$registerError)
   })
 }
