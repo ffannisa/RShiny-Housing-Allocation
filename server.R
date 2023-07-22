@@ -9,31 +9,32 @@
 
 library(shiny)
 source("databaseFunctions.R")
+source("templates.R")
 
-checkExistingUsername<- function (username){
-  # username: string
-  # check if this username is already in use
-  # return TRUE or FALSE
-}
+
 # Define server logic required to draw a histogram
 function(input, output, session) {
-  values<-reactiveValues(userInfo=NULL)
   
   
-  #function that runs when user wishes to register
-  observeEvent(input$registerButton,{
-    username<-input$registerUsername
-    if (input$registerUsername==""){
-      output$registerError<-"Empty username!"
-    } else if (input$registerUsername==""){
-      output$registerError<-"Empty password!"
-    }
-    else if (input$registerPassword!=input$registerPasswordConfirmation){
-      output$registerError<-"Password Confirmation Does not match Password."
-    } else{
-      # 
-    }
+  
+  # define stored values
+  values<-reactiveValues(username=NULL,current_statistics=NULL,land_use=NULL)
+  
+  # UI functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  
+  # Show passwordModal
+  observeEvent(input$register, {
+    showModal(passwordModal(failed=FALSE))
   })
+  
+  # Show loginModal
+  observeEvent(input$login, {
+    showModal(loginModal(failed=FALSE))
+  })
+  
+  # Game calculation functions  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  source("gameCalc.R")
+  
   
 }
 
