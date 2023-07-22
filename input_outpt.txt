@@ -3,6 +3,9 @@ registerButton
 registerUsername
 registerPassword
 registerPasswordConfirmation
+loginUsername
+loginPassword
+loginButton
 
 outputs:
 registerError: String  (this to show error: Please check Log-in details)
