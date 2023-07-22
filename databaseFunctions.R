@@ -13,6 +13,7 @@
 #createUser<-function(username,password){
   #create a user with this username and password
   # return either "success" or string with error message
+  
 #}
 
 #login<-function(username,password){
@@ -46,22 +47,21 @@ checkExistingUsername <- function(username) {
   }
 }
 
-stripSQLKeywords <- function(input_string) {
+stripSQLKeywords <- function(username) {
   # The system shall strip the Player Name and password of SQL keywords
-  # Replace any SQL keywords or dangerous characters from the input_string
+  # Replace any SQL keywords or dangerous characters from the username
   
   # List of SQL keywords and dangerous characters to be removed
   sql_keywords <- c("SELECT", "INSERT", "UPDATE", "DELETE", "DROP", "CREATE", "ALTER", "TABLE", "DATABASE", ";", "--", "#", "/*", "*/")
   
-  # Remove SQL keywords and dangerous characters from the input_string using gsub
+  # Remove SQL keywords and dangerous characters from the username using gsub
   for (keyword in sql_keywords) {
-    input_string <- gsub(keyword, "", input_string, ignore.case = TRUE)
+    username <- gsub(keyword, "", username, ignore.case = TRUE)
   }
   
   # Return the sanitized input_string
-  return(input_string)
+  return(username)
 }
-
 
 
 createUser <- function(username, password) {
@@ -106,39 +106,20 @@ login <- function(username, password) {
 }
 
 
+# Vivek's AWS
+# dbname = "student034",
+# host = "database-1.ceo4ehzjeeg0.ap-southeast-1.rds.amazonaws.com",
+# username = "student034",
+# password = "!YNSD2qQH*-6"
 
 getAWSConnection <- function(){
   conn <- dbConnect(
     drv = RMySQL::MySQL(),
-    dbname = "student034",
+    dbname = "student098",
     host = "database-1.ceo4ehzjeeg0.ap-southeast-1.rds.amazonaws.com",
-    username = "student034",
-    password = "!YNSD2qQH*-6")
+    username = "student098",
+    password = "C4Z!RZuJfRq5")
   conn
-}
-
-getPlayerID <- function(playername,password){
-  #open the connection
-  conn <- getAWSConnection()
-  #password could contain an SQL insertion attack
-  #Create a template for the query with placeholders for playername and password
-  querytemplate <- "SELECT * FROM player WHERE username=?id1 AND password=?id2;"
-  query<- sqlInterpolate(conn, querytemplate,id1=username,id2=password)
-  print(query) #for debug
-  result <- dbGetQuery(conn,query)
-  # If the query is successful, result should be a dataframe with one row
-  if (nrow(result)==1){
-    playerid <- result$playerid[1]
-  } else {
-    print(result) #for debugging
-    playerid <- 0
-  }
-  #print(result)
-  #print(playerid)
-  #Close the connection
-  dbDisconnect(conn)
-  # return the playerid
-  playerid
 }
 
 
@@ -148,5 +129,4 @@ createNewPlayerQuery <- function(conn,username,password){
   querytemplate <- "INSERT INTO player (username,password) VALUES (?id1,?id2);"
   query<- sqlInterpolate(conn, querytemplate,id1=username,id2=password)
 }
-
 
