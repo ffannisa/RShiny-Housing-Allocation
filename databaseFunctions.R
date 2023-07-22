@@ -31,7 +31,7 @@
   # finds the land use for the username and puts it into a dataframe
   # return data.frame with columns: grid_number, type, remaining_lease
 #}
-
+library(RMySQL)
 
 checkExistingUsername <- function(username) {
   # Check if this username is already in use in the database
