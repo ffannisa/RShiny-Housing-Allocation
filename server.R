@@ -34,6 +34,7 @@ function(input, output, session) {
   
   # Game calculation functions  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   source("gameCalc.R")
+  gameCalc(input,output,session)
   
   
 }

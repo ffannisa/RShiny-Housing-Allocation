@@ -32,14 +32,6 @@ findLandUse<- function(username){
 
 
 
-checkExistingUsername<- function (username){
-  # username: string
-  # check if this username is already in use
-  # return TRUE or FALSE
-}
-#add user
-
-
 getPlayerID <- function(playername,password){
   #open the connection
   conn <- getAWSConnection()

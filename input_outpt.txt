@@ -6,3 +6,8 @@ registerPasswordConfirmation
 
 outputs:
 registerError: String  (this to show error: Please check Log-in details)
+
+values:
+username,
+current_statistics,
+land_use
