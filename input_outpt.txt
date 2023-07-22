@@ -5,4 +5,4 @@ registerPassword
 registerPasswordConfirmation
 
 outputs:
-registerError: String
+registerError: String  (this to show error: Please check Log-in details)
