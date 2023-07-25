@@ -31,6 +31,16 @@
   # finds the land use for the username and puts it into a dataframe
   # return data.frame with columns: grid_number, type, remaining_lease
 #}
+
+#if no exisitng land use, implement default values(initial game setting)
+
+
+# save land use -> land use df and username-> save onto DB
+
+# save game statistics -> 
+ 
+#retrieve leaderboard
+
 library(RMySQL)
 
 checkExistingUsername <- function(username) {
@@ -126,15 +136,30 @@ findLandUse <- function(username) {
   conn <- getAWSConnection()
   
   # Query to find the land use for the username
-  query <- sqlInterpolate(conn, "SELECT grid_number, type, remaining_lease FROM landuse WHERE username = ?id;", id = username)
+  query <- sqlInterpolate(conn, "SELECT grid_number, type, remaining_lease FROM current_land_use WHERE username = ?id;", id = username)
   
   # Execute the query and get the result
   result <- dbGetQuery(conn, query)
   
   dbDisconnect(conn)
   
-  return(result)
+  # If there are no existing land use records, implement default values (empty grid with no values)
+  if (nrow(result) == 0) {
+    # Create an empty grid with default values
+    default_values <- data.frame(
+      grid_number = 1:16,
+      type = rep("Empty", 16),
+      remaining_lease = rep(0, 16)
+    )
+    
+    # Return the default values
+    return(default_values)
+  } else {
+    # Return the result with existing land use records
+    return(result)
+  }
 }
+
 
 
 # PlaceHousing - This function allows a user to place a housing type on the grid.
