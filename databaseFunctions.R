@@ -138,33 +138,30 @@ findLandUse <- function(username) {
 
 
 # PlaceHousing - This function allows a user to place a housing type on the grid.
-placeHousing <- function(username, grid_number, housing_type) {
+placeHousing <- function(username, grid_number, type, remaining_lease) {
   conn <- getAWSConnection()
   
-  # Check if the box is already occupied by a housing type for this user
-  query_check <- sqlInterpolate(conn, "SELECT COUNT(*) as count FROM housing_placements WHERE username = ?id1 AND box_number = ?id2;", id1 = username, id2 = box_number)
+  # Check if the box is already occupied by a land use type for this user
+  query_check <- sqlInterpolate(conn, "SELECT COUNT(*) as count FROM current_land_use WHERE username = ?id1 AND grid_number = ?id2;", id1 = username, id2 = grid_number)
   result_check <- dbGetQuery(conn, query_check)
   
-  if (result_check$count[1] > 0) {
-    # The box is already occupied, update the existing record
-    query_update <- sqlInterpolate(conn, "UPDATE housing_placements SET housing_type = ?id3 WHERE username = ?id1 AND box_number = ?id2;", id1 = username, id2 = box_number, id3 = housing_type)
-    dbExecute(conn, query_update)
-  } else {
+  if (result_check$count[1] == 0) {
     # The box is not occupied, insert a new record
-    query_insert <- sqlInterpolate(conn, "INSERT INTO housing_placements (username, box_number, housing_type) VALUES (?id1, ?id2, ?id3);", id1 = username, id2 = box_number, id3 = housing_type)
+    query_insert <- sqlInterpolate(conn, "INSERT INTO current_land_use (username, grid_number, type, remaining_lease) VALUES (?id1, ?id2, ?id3, ?id4);", id1 = username, id2 = grid_number, id3 = type, id4 = remaining_lease)
     dbExecute(conn, query_insert)
   }
   
   dbDisconnect(conn)
 }
 
+
 #RemoveHousing - This function allows a user to remove a placed housing type from the grid.
 
 removeHousing <- function(username, grid_number) {
   conn <- getAWSConnection()
   
-  # Delete the record from the housing_placements table for the given box number
-  query_delete <- sqlInterpolate(conn, "DELETE FROM housing_placements WHERE username = ?id1 AND box_number = ?id2;", id1 = username, id2 = box_number)
+  # Delete the record from the current_land_use table for the given grid number
+  query_delete <- sqlInterpolate(conn, "DELETE FROM current_land_use WHERE username = ?id1 AND grid_number = ?id2;", id1 = username, id2 = grid_number)
   dbExecute(conn, query_delete)
   
   dbDisconnect(conn)
