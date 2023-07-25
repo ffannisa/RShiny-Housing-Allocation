@@ -1,4 +1,4 @@
-# shiny.decisions
+# Housing Allocation Game!
 A game about making the best of terrible choices
 
 In shiny decisions your goal is to last as long as possible while making decisions that affect the wealth, population and environment quality in the world.
