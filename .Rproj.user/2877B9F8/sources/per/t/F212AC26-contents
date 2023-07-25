@@ -13,7 +13,6 @@
 #createUser<-function(username,password){
   #create a user with this username and password
   # return either "success" or string with error message
-  
 #}
 
 #login<-function(username,password){
@@ -31,7 +30,7 @@
   # finds the land use for the username and puts it into a dataframe
   # return data.frame with columns: grid_number, type, remaining_lease
 #}
-library(RMySQL)
+
 
 checkExistingUsername <- function(username) {
   # Check if this username is already in use in the database
@@ -47,21 +46,22 @@ checkExistingUsername <- function(username) {
   }
 }
 
-stripSQLKeywords <- function(username) {
+stripSQLKeywords <- function(input_string) {
   # The system shall strip the Player Name and password of SQL keywords
-  # Replace any SQL keywords or dangerous characters from the username
+  # Replace any SQL keywords or dangerous characters from the input_string
   
   # List of SQL keywords and dangerous characters to be removed
   sql_keywords <- c("SELECT", "INSERT", "UPDATE", "DELETE", "DROP", "CREATE", "ALTER", "TABLE", "DATABASE", ";", "--", "#", "/*", "*/")
   
-  # Remove SQL keywords and dangerous characters from the username using gsub
+  # Remove SQL keywords and dangerous characters from the input_string using gsub
   for (keyword in sql_keywords) {
-    username <- gsub(keyword, "", username, ignore.case = TRUE)
+    input_string <- gsub(keyword, "", input_string, ignore.case = TRUE)
   }
   
   # Return the sanitized input_string
-  return(username)
+  return(input_string)
 }
+
 
 
 createUser <- function(username, password) {
@@ -107,85 +107,38 @@ login <- function(username, password) {
 
 
 
-
-findLatestStatistics <- function(username) {
-  conn <- getAWSConnection()
-  
-  # Query to find the latest game data for the username
-  query <- sqlInterpolate(conn, "SELECT year, happiness, budget, population, homelessness, employment FROM leaderboard WHERE username = ?id ORDER BY year DESC LIMIT 1;", id = username)
-  
-  # Execute the query and get the result
-  result <- dbGetQuery(conn, query)
-  
-  dbDisconnect(conn)
-  
-  return(result)
-}
-
-findLandUse <- function(username) {
-  conn <- getAWSConnection()
-  
-  # Query to find the land use for the username
-  query <- sqlInterpolate(conn, "SELECT grid_number, type, remaining_lease FROM landuse WHERE username = ?id;", id = username)
-  
-  # Execute the query and get the result
-  result <- dbGetQuery(conn, query)
-  
-  dbDisconnect(conn)
-  
-  return(result)
-}
-
-
-# PlaceHousing - This function allows a user to place a housing type on the grid.
-placeHousing <- function(username, grid_number, housing_type) {
-  conn <- getAWSConnection()
-  
-  # Check if the box is already occupied by a housing type for this user
-  query_check <- sqlInterpolate(conn, "SELECT COUNT(*) as count FROM housing_placements WHERE username = ?id1 AND box_number = ?id2;", id1 = username, id2 = box_number)
-  result_check <- dbGetQuery(conn, query_check)
-  
-  if (result_check$count[1] > 0) {
-    # The box is already occupied, update the existing record
-    query_update <- sqlInterpolate(conn, "UPDATE housing_placements SET housing_type = ?id3 WHERE username = ?id1 AND box_number = ?id2;", id1 = username, id2 = box_number, id3 = housing_type)
-    dbExecute(conn, query_update)
-  } else {
-    # The box is not occupied, insert a new record
-    query_insert <- sqlInterpolate(conn, "INSERT INTO housing_placements (username, box_number, housing_type) VALUES (?id1, ?id2, ?id3);", id1 = username, id2 = box_number, id3 = housing_type)
-    dbExecute(conn, query_insert)
-  }
-  
-  dbDisconnect(conn)
-}
-
-#RemoveHousing - This function allows a user to remove a placed housing type from the grid.
-
-removeHousing <- function(username, grid_number) {
-  conn <- getAWSConnection()
-  
-  # Delete the record from the housing_placements table for the given box number
-  query_delete <- sqlInterpolate(conn, "DELETE FROM housing_placements WHERE username = ?id1 AND box_number = ?id2;", id1 = username, id2 = box_number)
-  dbExecute(conn, query_delete)
-  
-  dbDisconnect(conn)
-}
-
-
-
-# Vivek's AWS
-# dbname = "student034",
-# host = "database-1.ceo4ehzjeeg0.ap-southeast-1.rds.amazonaws.com",
-# username = "student034",
-# password = "!YNSD2qQH*-6"
-
 getAWSConnection <- function(){
   conn <- dbConnect(
     drv = RMySQL::MySQL(),
-    dbname = "student098",
+    dbname = "student034",
     host = "database-1.ceo4ehzjeeg0.ap-southeast-1.rds.amazonaws.com",
-    username = "student098",
-    password = "C4Z!RZuJfRq5")
+    username = "student034",
+    password = "!YNSD2qQH*-6")
   conn
+}
+
+getPlayerID <- function(playername,password){
+  #open the connection
+  conn <- getAWSConnection()
+  #password could contain an SQL insertion attack
+  #Create a template for the query with placeholders for playername and password
+  querytemplate <- "SELECT * FROM player WHERE username=?id1 AND password=?id2;"
+  query<- sqlInterpolate(conn, querytemplate,id1=username,id2=password)
+  print(query) #for debug
+  result <- dbGetQuery(conn,query)
+  # If the query is successful, result should be a dataframe with one row
+  if (nrow(result)==1){
+    playerid <- result$playerid[1]
+  } else {
+    print(result) #for debugging
+    playerid <- 0
+  }
+  #print(result)
+  #print(playerid)
+  #Close the connection
+  dbDisconnect(conn)
+  # return the playerid
+  playerid
 }
 
 

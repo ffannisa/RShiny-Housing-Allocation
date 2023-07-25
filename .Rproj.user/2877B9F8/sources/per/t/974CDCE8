@@ -1,0 +1,26 @@
+{
+    "id": "974CDCE8",
+    "path": "~/Documents/GitHub/RShiny-Housing-Allocation/ui.R",
+    "project_path": "ui.R",
+    "type": "r_source",
+    "hash": "3531742205",
+    "contents": "",
+    "dirty": false,
+    "created": 1690016904020.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "21,4",
+        "scrollLine": "19"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1690008180,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1690008180,
+    "read_only": false,
+    "read_only_alternatives": []
+}
