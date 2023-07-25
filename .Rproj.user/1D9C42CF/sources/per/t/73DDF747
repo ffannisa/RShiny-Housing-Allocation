@@ -1,0 +1,26 @@
+{
+    "id": "73DDF747",
+    "path": "~/GitHub/ffannisa-Workspace/RShiny-Housing-Allocation/server.R",
+    "project_path": "server.R",
+    "type": "r_source",
+    "hash": "159953447",
+    "contents": "",
+    "dirty": false,
+    "created": 1690261753268.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "3,1",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1690261406,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1690261406,
+    "read_only": false,
+    "read_only_alternatives": []
+}
