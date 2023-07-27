@@ -57,6 +57,8 @@ checkExistingUsername <- function(username) {
   }
 }
 
+
+
 stripSQLKeywords <- function(username) {
   # The system shall strip the Player Name and password of SQL keywords
   # Replace any SQL keywords or dangerous characters from the username
@@ -72,6 +74,7 @@ stripSQLKeywords <- function(username) {
   # Return the sanitized input_string
   return(username)
 }
+
 
 
 createUser <- function(username, password) {
@@ -101,6 +104,16 @@ createUser <- function(username, password) {
 }
 
 
+
+createNewPlayerQuery <- function(conn,username,password){
+  #password could contain an SQL insertion attack
+  #Create a template for the query with placeholder for  password
+  querytemplate <- "INSERT INTO player (username,password) VALUES (?id1,?id2);"
+  query<- sqlInterpolate(conn, querytemplate,id1=username,id2=password)
+}
+
+
+
 login <- function(username, password) {
   # Check that the username and password is correct in the database
   conn <- getAWSConnection()
@@ -116,13 +129,12 @@ login <- function(username, password) {
 }
 
 
-
-
+# TESTED
 findLatestStatistics <- function(username) {
   conn <- getAWSConnection()
   
   # Query to find the latest game data for the username
-  query <- sqlInterpolate(conn, "SELECT year, happiness, budget, population, homelessness, employment FROM leaderboard WHERE username = ?id ORDER BY year DESC LIMIT 1;", id = username)
+  query <- sqlInterpolate(conn, "SELECT year, happiness, budget, population, homelessness, employment FROM historic_data WHERE username = ?id ORDER BY year DESC LIMIT 1;", id = username)
   
   # Execute the query and get the result
   result <- dbGetQuery(conn, query)
@@ -132,6 +144,9 @@ findLatestStatistics <- function(username) {
   return(result)
 }
 
+
+# TESTED
+# RMB TO UPDATE DEFAULT VALUES AFTER DISCUSSING
 findLandUse <- function(username) {
   conn <- getAWSConnection()
   
@@ -161,7 +176,7 @@ findLandUse <- function(username) {
 }
 
 
-
+# DON'T THINK THIS WORKS
 # PlaceHousing - This function allows a user to place a housing type on the grid.
 placeHousing <- function(username, grid_number, type, remaining_lease) {
   conn <- getAWSConnection()
@@ -180,9 +195,11 @@ placeHousing <- function(username, grid_number, type, remaining_lease) {
 }
 
 
-#RemoveHousing - This function allows a user to remove a placed housing type from the grid.
+# why does function return TRUE when I key in a grid no. that doesn't exist + username with no data stored on dbeaver
+# able to remove structure from existing grid
 
-removeHousing <- function(username, grid_number) {
+# removeStructure - This function allows a user to remove an existing structure from the grid.
+removeStructure <- function(username, grid_number) {
   conn <- getAWSConnection()
   
   # Delete the record from the current_land_use table for the given grid number
@@ -209,13 +226,3 @@ getAWSConnection <- function(){
     password = "C4Z!RZuJfRq5")
   conn
 }
-
-
-createNewPlayerQuery <- function(conn,username,password){
-  #password could contain an SQL insertion attack
-  #Create a template for the query with placeholder for  password
-  querytemplate <- "INSERT INTO player (username,password) VALUES (?id1,?id2);"
-  query<- sqlInterpolate(conn, querytemplate,id1=username,id2=password)
-}
-
-
