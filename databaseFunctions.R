@@ -176,7 +176,7 @@ findLandUse <- function(username) {
 }
 
 
-# DON'T THINK THIS WORKS
+# WORKS BUT NEED EDIT OUTPUT, CURRENT OUTPUT IS WHETHER CAN DISCONNECT FROM DBEAVER
 # PlaceHousing - This function allows a user to place a housing type on the grid.
 placeHousing <- function(username, grid_number, type, remaining_lease) {
   conn <- getAWSConnection()
@@ -192,6 +192,7 @@ placeHousing <- function(username, grid_number, type, remaining_lease) {
   }
   
   dbDisconnect(conn)
+  # VIVEK GPT will add this
 }
 
 
@@ -207,6 +208,7 @@ removeStructure <- function(username, grid_number) {
   dbExecute(conn, query_delete)
   
   dbDisconnect(conn)
+  # change output 
 }
 
 
@@ -226,3 +228,4 @@ getAWSConnection <- function(){
     password = "C4Z!RZuJfRq5")
   conn
 }
+
