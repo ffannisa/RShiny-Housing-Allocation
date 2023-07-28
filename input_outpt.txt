@@ -11,3 +11,9 @@ values:
 username,
 current_statistics,
 land_use
+
+buttons: (actionbuttons)
+actionButton("build", label = "Build!", class = "nes-btn is-primary")
+actionButton("progress", label = "Progress Time!", class = "nes-btn is-primary")
+actionButton("demolish", label = "Demolish!", class = "nes-btn is-primary")
+actionButton("stats", label = "Show Statistics", class = "nes-btn is-primary")
