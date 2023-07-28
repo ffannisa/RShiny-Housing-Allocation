@@ -129,6 +129,24 @@ login <- function(username, password) {
 }
 
 
+# Save data onto AWS database
+conn <- getAWSConnection()
+saveGameStatistics <- function(conn, username, year, happiness, budget, population, homelessness, employment) {
+  # Prepare the query to insert the data into the historic_data table
+  query <- sprintf("INSERT INTO historic_data (username, year, happiness, budget, population, homelessness, employment) VALUES ('%s', %d, %d, %d, %d, %d, %d)",
+                   username, year, happiness, budget, population, homelessness, employment)
+  
+  # Execute the query to insert the data into the historical_data table
+  dbExecute(conn, query)
+  
+  # Return the success message
+  message <- "Data has been saved successfully"
+  return(message)
+}
+
+saveGameStatistics(conn, "username1", 2023, 85, 1000, 5000, 10, 90)
+saveGameStatistics(conn, "a", 2023, 85, 1000, 5000, 10, 90)
+
 # TESTED
 findLatestStatistics <- function(username) {
   conn <- getAWSConnection()
@@ -145,7 +163,7 @@ findLatestStatistics <- function(username) {
 }
 
 
-# TESTED
+
 # RMB TO UPDATE DEFAULT VALUES AFTER DISCUSSING
 findLandUse <- function(username) {
   conn <- getAWSConnection()
@@ -176,9 +194,39 @@ findLandUse <- function(username) {
 }
 
 
-# WORKS BUT NEED EDIT OUTPUT, CURRENT OUTPUT IS WHETHER CAN DISCONNECT FROM DBEAVER
-# PlaceHousing - This function allows a user to place a housing type on the grid.
-placeHousing <- function(username, grid_number, type, remaining_lease) {
+
+# conn <- getAWSConnection()
+SaveCurrentLanduse <- function(conn,data) {
+  if (is.null(data) || nrow(data) == 0) {
+    message <- "Data is empty. No records to save."
+    return(message)
+  }
+  
+  # First, delete any existing records for the given username
+  username <- unique(data$username)
+  query_delete <- sqlInterpolate(conn, "DELETE FROM current_land_use WHERE username = ?id1;", id1 = username)
+  dbExecute(conn, query_delete)
+  
+  # Then, insert the new records into the current_land_use table
+  query_insert <- "INSERT INTO current_land_use (username, grid_number, type, remaining_lease) VALUES "
+  for (i in 1:nrow(data)) {
+    query_insert <- sqlInterpolate(conn, "INSERT INTO current_land_use (username, grid_number, type, remaining_lease) VALUES (?id1, ?id2, ?id3, ?id4)", 
+                                                        id1 = data$username[i], 
+                                                        id2 = data$grid_number[i], 
+                                                        id3 = data$type[i], 
+                                                        id4 = data$remaining_lease[i])
+    dbExecute(conn, query_insert)
+  }
+  
+  # Return the success message
+  message <- "Data has been saved successfully"
+  return(message)
+}
+
+
+
+# PlaceStructure - This function allows a user to place a structure on the grid.
+placeStructure <- function(username, grid_number, type, remaining_lease) {
   conn <- getAWSConnection()
   
   # Check if the box is already occupied by a land use type for this user
@@ -189,15 +237,17 @@ placeHousing <- function(username, grid_number, type, remaining_lease) {
     # The box is not occupied, insert a new record
     query_insert <- sqlInterpolate(conn, "INSERT INTO current_land_use (username, grid_number, type, remaining_lease) VALUES (?id1, ?id2, ?id3, ?id4);", id1 = username, id2 = grid_number, id3 = type, id4 = remaining_lease)
     dbExecute(conn, query_insert)
+    message <- "Structure built successfully"
+  } else {
+    # The box is already occupied
+    message <- "There is already a structure built"
   }
   
   dbDisconnect(conn)
-  # VIVEK GPT will add this
+  return(message)
 }
 
 
-# why does function return TRUE when I key in a grid no. that doesn't exist + username with no data stored on dbeaver
-# able to remove structure from existing grid
 
 # removeStructure - This function allows a user to remove an existing structure from the grid.
 removeStructure <- function(username, grid_number) {
@@ -208,7 +258,48 @@ removeStructure <- function(username, grid_number) {
   dbExecute(conn, query_delete)
   
   dbDisconnect(conn)
-  # change output 
+  
+  # Return the custom message
+  message <- "The structure has been removed successfully"
+  return(message)
+}
+
+# NEEDS SOME WORK HAHA
+RetrieveLeaderboard <- function(username) {
+  # Get the latest statistics for the given username
+  latest_stats <- findLatestStatistics(username)
+  
+  # Check if the latest_stats data frame is not empty
+  if (nrow(latest_stats) == 0) {
+    stop("No data found for the given username.")
+  }
+  
+  # Connect to the database using the getAWSConnection function
+  conn <- getAWSConnection()
+  
+  # Prepare the query to insert data into the leaderboard table
+  query_template <- "INSERT INTO leaderboard (username, happiness, budget, population, homelessness, employment) VALUES ('%s', %d, %d, %d, %d, %d)"
+  
+  # Iterate through the rows of the data frame and insert data into the leaderboard table
+  for (i in 1:nrow(latest_stats)) {
+    query <- sprintf(query_template,
+                     latest_stats$username[i],
+                     latest_stats$happiness[i],
+                     latest_stats$budget[i],
+                     latest_stats$population[i],
+                     latest_stats$homelessness[i],
+                     latest_stats$employment[i])
+    
+    # Execute the query to insert the data into the leaderboard table
+    dbExecute(conn, query)
+  }
+  
+  # Disconnect from the database
+  dbDisconnect(conn)
+  
+  # Return the success message
+  message <- "Data has been saved successfully in the leaderboard table."
+  return(message)
 }
 
 
