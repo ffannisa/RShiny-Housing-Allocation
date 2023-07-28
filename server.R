@@ -18,7 +18,7 @@ function(input, output, session) {
   
   
   # define stored values
-  values<-reactiveValues(username=NULL,current_statistics=NULL,land_use=NULL)
+  values<-reactiveValues(username=NULL,current_statistics=NULL,land_use=NULL,building_cost=0)
   
   # UI functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   

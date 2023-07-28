@@ -38,3 +38,9 @@ loginModal <- function(failed = FALSE) {
   )
 }
 
+dialogBox<-function(t="abababababa"){
+  modalDialog(
+    t
+  )
+}
+
