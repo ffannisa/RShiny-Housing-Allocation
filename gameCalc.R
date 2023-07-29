@@ -62,11 +62,15 @@ gameCalc<-function(input,output,session,values){
     }
   })
   
-  observeEvent(input$buildButton,{
-    if(current_statistics$budget <values$building_cost){
-      
-    }else if(current_statistics$budget >=values$building_cost){
-      # execute as per normal
+  
+  #USE CASE 5 SELECTION CONFIRMATION
+  observeEvent(input$build,{
+    if(values$current_statistics$budget <values$building_cost){
+      showModal(dialogBox("You do not have enough money"))
+    }else if(values$current_statistics$budget >=values$building_cost){
+      showModal(dialogBox("replace land use with construction at appropriate spots and deduct money"))
     }
   })
+  
+  
 }

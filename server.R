@@ -17,8 +17,11 @@ function(input, output, session) {
   
   
   
-  # define stored values
-  values<-reactiveValues(username=NULL,current_statistics=NULL,land_use=NULL,building_cost=0)
+  # define stored values !!! THIS DATA IS PLACEHOLDER FOR TESTING
+  values<-reactiveValues(username=NULL,
+                         current_statistics=data.frame(year=c(1),happiness=c(1),budget=c(1000),population=c(10),homelessness=c(0),employment=c(0)),
+                         land_use=NULL,
+                         building_cost=2000)
   
   # UI functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   

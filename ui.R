@@ -48,6 +48,11 @@ fluidPage(
   
   # Apply CSS to center the entire page
   style = "display: flex; flex-direction: column; justify-content: space-between; align-items: center; height: 100vh;"
-    
+  
+  # !!! For testing. REMOVE THIS
+  ,actionButton("build", label = "Build!", class = "nes-btn is-primary"),
+  actionButton("progress", label = "Progress Time!", class = "nes-btn is-primary"),
+  actionButton("demolish", label = "Demolish!", class = "nes-btn is-primary"),
+  actionButton("stats", label = "Show Statistics", class = "nes-btn is-primary")  
     
 )
