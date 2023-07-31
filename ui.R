@@ -56,3 +56,4 @@ fluidPage(
   actionButton("stats", label = "Show Statistics", class = "nes-btn is-primary")  
     
 )
+

@@ -31,6 +31,16 @@
   # finds the land use for the username and puts it into a dataframe
   # return data.frame with columns: grid_number, type, remaining_lease
 #}
+
+#if no exisitng land use, implement default values(initial game setting)
+
+
+# save land use -> land use df and username-> save onto DB
+
+# save game statistics -> 
+ 
+#retrieve leaderboard
+
 library(RMySQL)
 
 checkExistingUsername <- function(username) {
@@ -47,6 +57,8 @@ checkExistingUsername <- function(username) {
   }
 }
 
+
+
 stripSQLKeywords <- function(username) {
   # The system shall strip the Player Name and password of SQL keywords
   # Replace any SQL keywords or dangerous characters from the username
@@ -62,6 +74,7 @@ stripSQLKeywords <- function(username) {
   # Return the sanitized input_string
   return(username)
 }
+
 
 
 createUser <- function(username, password) {
@@ -91,6 +104,16 @@ createUser <- function(username, password) {
 }
 
 
+
+createNewPlayerQuery <- function(conn,username,password){
+  #password could contain an SQL insertion attack
+  #Create a template for the query with placeholder for  password
+  querytemplate <- "INSERT INTO player (username,password) VALUES (?id1,?id2);"
+  query<- sqlInterpolate(conn, querytemplate,id1=username,id2=password)
+}
+
+
+
 login <- function(username, password) {
   # Check that the username and password is correct in the database
   conn <- getAWSConnection()
@@ -106,13 +129,30 @@ login <- function(username, password) {
 }
 
 
+# Save data onto AWS database
+conn <- getAWSConnection()
+saveGameStatistics <- function(conn, username, year, happiness, budget, population, homelessness, employment) {
+  # Prepare the query to insert the data into the historic_data table
+  query <- sprintf("INSERT INTO historic_data (username, year, happiness, budget, population, homelessness, employment) VALUES ('%s', %d, %d, %d, %d, %d, %d)",
+                   username, year, happiness, budget, population, homelessness, employment)
+  
+  # Execute the query to insert the data into the historical_data table
+  dbExecute(conn, query)
+  
+  # Return the success message
+  message <- "Data has been saved successfully"
+  return(message)
+}
 
+saveGameStatistics(conn, "username1", 2023, 85, 1000, 5000, 10, 90)
+saveGameStatistics(conn, "a", 2023, 85, 1000, 5000, 10, 90)
 
+# TESTED
 findLatestStatistics <- function(username) {
   conn <- getAWSConnection()
   
   # Query to find the latest game data for the username
-  query <- sqlInterpolate(conn, "SELECT year, happiness, budget, population, homelessness, employment FROM leaderboard WHERE username = ?id ORDER BY year DESC LIMIT 1;", id = username)
+  query <- sqlInterpolate(conn, "SELECT year, happiness, budget, population, homelessness, employment FROM historic_data WHERE username = ?id ORDER BY year DESC LIMIT 1;", id = username)
   
   # Execute the query and get the result
   result <- dbGetQuery(conn, query)
@@ -122,23 +162,71 @@ findLatestStatistics <- function(username) {
   return(result)
 }
 
+
+
+# RMB TO UPDATE DEFAULT VALUES AFTER DISCUSSING
 findLandUse <- function(username) {
   conn <- getAWSConnection()
   
   # Query to find the land use for the username
-  query <- sqlInterpolate(conn, "SELECT grid_number, type, remaining_lease FROM landuse WHERE username = ?id;", id = username)
+  query <- sqlInterpolate(conn, "SELECT grid_number, type, remaining_lease FROM current_land_use WHERE username = ?id;", id = username)
   
   # Execute the query and get the result
   result <- dbGetQuery(conn, query)
   
   dbDisconnect(conn)
   
-  return(result)
+  # If there are no existing land use records, implement default values (empty grid with no values)
+  if (nrow(result) == 0) {
+    # Create an empty grid with default values
+    default_values <- data.frame(
+      grid_number = 1:16,
+      type = rep("Empty", 16),
+      remaining_lease = rep(0, 16)
+    )
+    
+    # Return the default values
+    return(default_values)
+  } else {
+    # Return the result with existing land use records
+    return(result)
+  }
 }
 
 
-# PlaceHousing - This function allows a user to place a housing type on the grid.
-placeHousing <- function(username, grid_number, type, remaining_lease) {
+
+# conn <- getAWSConnection()
+SaveCurrentLanduse <- function(conn,data) {
+  if (is.null(data) || nrow(data) == 0) {
+    message <- "Data is empty. No records to save."
+    return(message)
+  }
+  
+  # First, delete any existing records for the given username
+  username <- unique(data$username)
+  query_delete <- sqlInterpolate(conn, "DELETE FROM current_land_use WHERE username = ?id1;", id1 = username)
+  dbExecute(conn, query_delete)
+  
+  # Then, insert the new records into the current_land_use table
+  query_insert <- "INSERT INTO current_land_use (username, grid_number, type, remaining_lease) VALUES "
+  for (i in 1:nrow(data)) {
+    query_insert <- sqlInterpolate(conn, "INSERT INTO current_land_use (username, grid_number, type, remaining_lease) VALUES (?id1, ?id2, ?id3, ?id4)", 
+                                                        id1 = data$username[i], 
+                                                        id2 = data$grid_number[i], 
+                                                        id3 = data$type[i], 
+                                                        id4 = data$remaining_lease[i])
+    dbExecute(conn, query_insert)
+  }
+  
+  # Return the success message
+  message <- "Data has been saved successfully"
+  return(message)
+}
+
+
+
+# PlaceStructure - This function allows a user to place a structure on the grid.
+placeStructure <- function(username, grid_number, type, remaining_lease) {
   conn <- getAWSConnection()
   
   # Check if the box is already occupied by a land use type for this user
@@ -149,15 +237,20 @@ placeHousing <- function(username, grid_number, type, remaining_lease) {
     # The box is not occupied, insert a new record
     query_insert <- sqlInterpolate(conn, "INSERT INTO current_land_use (username, grid_number, type, remaining_lease) VALUES (?id1, ?id2, ?id3, ?id4);", id1 = username, id2 = grid_number, id3 = type, id4 = remaining_lease)
     dbExecute(conn, query_insert)
+    message <- "Structure built successfully"
+  } else {
+    # The box is already occupied
+    message <- "There is already a structure built"
   }
   
   dbDisconnect(conn)
+  return(message)
 }
 
 
-#RemoveHousing - This function allows a user to remove a placed housing type from the grid.
 
-removeHousing <- function(username, grid_number) {
+# removeStructure - This function allows a user to remove an existing structure from the grid.
+removeStructure <- function(username, grid_number) {
   conn <- getAWSConnection()
   
   # Delete the record from the current_land_use table for the given grid number
@@ -165,6 +258,48 @@ removeHousing <- function(username, grid_number) {
   dbExecute(conn, query_delete)
   
   dbDisconnect(conn)
+  
+  # Return the custom message
+  message <- "The structure has been removed successfully"
+  return(message)
+}
+
+# NEEDS SOME WORK HAHA
+RetrieveLeaderboard <- function(username) {
+  # Get the latest statistics for the given username
+  latest_stats <- findLatestStatistics(username)
+  
+  # Check if the latest_stats data frame is not empty
+  if (nrow(latest_stats) == 0) {
+    stop("No data found for the given username.")
+  }
+  
+  # Connect to the database using the getAWSConnection function
+  conn <- getAWSConnection()
+  
+  # Prepare the query to insert data into the leaderboard table
+  query_template <- "INSERT INTO leaderboard (username, happiness, budget, population, homelessness, employment) VALUES ('%s', %d, %d, %d, %d, %d)"
+  
+  # Iterate through the rows of the data frame and insert data into the leaderboard table
+  for (i in 1:nrow(latest_stats)) {
+    query <- sprintf(query_template,
+                     latest_stats$username[i],
+                     latest_stats$happiness[i],
+                     latest_stats$budget[i],
+                     latest_stats$population[i],
+                     latest_stats$homelessness[i],
+                     latest_stats$employment[i])
+    
+    # Execute the query to insert the data into the leaderboard table
+    dbExecute(conn, query)
+  }
+  
+  # Disconnect from the database
+  dbDisconnect(conn)
+  
+  # Return the success message
+  message <- "Data has been saved successfully in the leaderboard table."
+  return(message)
 }
 
 
@@ -184,13 +319,4 @@ getAWSConnection <- function(){
     password = "C4Z!RZuJfRq5")
   conn
 }
-
-
-createNewPlayerQuery <- function(conn,username,password){
-  #password could contain an SQL insertion attack
-  #Create a template for the query with placeholder for  password
-  querytemplate <- "INSERT INTO player (username,password) VALUES (?id1,?id2);"
-  query<- sqlInterpolate(conn, querytemplate,id1=username,id2=password)
-}
-
 
