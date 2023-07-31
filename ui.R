@@ -22,7 +22,7 @@ fluidPage(
   ),
   
   # Link the external CSS file
-  includeCSS("Login_style.css"),
+  includeCSS("css/Login_style.css"),
   
   # Center the game title "Housing Hustlers" with spacing
   tags$div(
