@@ -1,7 +1,0 @@
-library(shiny); runApp('Register_Login_Temp.R')
-runApp('Register_Login_Temp.R')
-runApp('Register_Login_Temp.R')
-runApp('Register_Login_Temp.R')
-runApp('Register_Login_Temp.R')
-runApp('Register_Login_Temp.R')
-runApp('Register_Login_Temp.R')
