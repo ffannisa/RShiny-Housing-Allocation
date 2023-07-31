@@ -20,7 +20,7 @@ function(input, output, session) {
   # define stored values !!! THIS DATA IS PLACEHOLDER FOR TESTING
   values<-reactiveValues(username=NULL,
                          current_statistics=data.frame(year=c(1),happiness=c(1),budget=c(1000),population=c(10),homelessness=c(0),employment=c(0)),
-                         land_use=NULL,
+                         land_use=data.frame(grid_number=c(1:25),type=rep("empty",25),remaining_lease=rep(-1,25)),
                          building_cost=2000)
   
   # UI functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

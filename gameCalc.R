@@ -76,7 +76,7 @@ gameCalc<-function(input,output,session,values){
       values$building_cost<-0
       for (i in nrow(values$land_use)){
         if (values$land_use[i,"type"]=="planned house"){
-          values$land_use[i,"type"]<-"house construction"
+          values$land_use[i,"type"]<-"hdb_1 construction"
           values$land_use[i,"remaining lease"]<-3
         } else if(values$land_use[i,"type"]=="planned office"){
           values$land_use[i,"type"]<-"office construction"
@@ -94,7 +94,47 @@ gameCalc<-function(input,output,session,values){
   observeEvent(input$progress, {
     progressYears<- input$time
     for (i in 1:progressYears){
-      
+      values$current_statistics$year<-values$current_statistics$year+1
+      progressBarUpdater()
+      # increase values
+      values$current_statistics$happiness<-0.7*values$current_statistics$happiness-10*values$current_statistics$homeless+0.5*values$current_statistics$employment+50*sum(values$land_use$type=="office building")
+      values$current_statistics$budget<-values$current_statistics$budget-100*values$current_statistics$population+200*values$current_statistics$employment+10000*sum(values$land_use$type=="office building")
+      values$current_statistics$population<-values$current_statistics$population+0.1*values$current_statistics$population
+      # reduce leases
+      values$land_use$remaining_lease<-values$land_use$remaining_lease -1
+      # checking if change is needed
+      for (i in 1:25){
+        if (values$land_use$remaining_lease[i]==0){
+          if (values$land_use$type=="hdb_1" | values$land_use$type=="hdb_2" | values$land_use$type=="office" | values$land_use$type=="park"){
+            values$land_use$type<-"demolition"
+            values$land_use$remaining_lease[i]<-1  
+          }else if (values$land_use$type=="demolition"){
+            values$land_use$type<-"empty"
+          }else if (values$land_use$type=="hdb_1 construction"){
+            values$land_use$type<-"hdb_1"
+            values$land_use$remaining_lease[i]<-99  
+          }else if (values$land_use$type=="hdb_2 construction"){
+            values$land_use$type<-"hdb_2"
+            values$land_use$remaining_lease[i]<-99  
+          }else if (values$land_use$type=="office construction"){
+            values$land_use$type<-"office"
+            values$land_use$remaining_lease[i]<-10
+          }else if (values$land_use$type=="park construction"){
+            values$land_use$type<-"park"
+            values$land_use$remaining_lease[i]<-5
+          }else if (values$land_use$type=="hdb_1 construction"){
+            values$land_use$type<-"hdb_1"
+            values$land_use$remaining_lease[i]<-99  
+          }
+        }
+        
+      }
+      # update building related stats
+      values$current_statistics$employment<-min(values$current_statistics$population,50*values$land_use$type=="office building")
+      values$current_statistics$homelessness<-max(0,values$current_statistics$population-(200*sum(values$land_use$type=="hdb_1")+400*sum(values$land_use$type=="hdb_2")))
+      for (i in 1:25){
+        placeHousing(values$username,values$land_use[i,"grid_number"],values$land_use[i,"type"],values$land_use[i,"remaining_lease"])
+      }
     }
   })
   
@@ -106,6 +146,9 @@ changeTab<- function(tab){
   dialogBox("page will now change to game screen")
 }
 
+progressBarUpdater<-function(){
+  dialogBox("move year progress bar")
+}
 gridUpdater <- function(){
   # retrieve the values$land_use and update the appropriate html tags
   dialogBox("to build locations are actually built")
