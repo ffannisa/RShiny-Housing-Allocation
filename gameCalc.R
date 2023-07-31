@@ -1,5 +1,7 @@
 source("databaseFunctions.R")
 
+
+
 gameCalc<-function(input,output,session,values){
   #USE CASE 1 USER REGISTRATION
   observeEvent(input$registerButton,{
@@ -22,7 +24,7 @@ gameCalc<-function(input,output,session,values){
           registerError<-paste0("Strange SQL error\n",response)
         }else{
           values$username<-username
-          # insert function to change to game screen with default game data
+          changeTab(gameTab)
           removeModal()
         }
       }
@@ -51,7 +53,7 @@ gameCalc<-function(input,output,session,values){
         values$username<-username
         values$current_statistics<-findLatestStatistics(values$username)
         values$land_use<-findLandUse(values$username)
-        # insert function to change to game screen
+        changeTab(gameTab)
         removeModal()
       }
     }
@@ -69,8 +71,42 @@ gameCalc<-function(input,output,session,values){
       showModal(dialogBox("You do not have enough money"))
     }else if(values$current_statistics$budget >=values$building_cost){
       showModal(dialogBox("replace land use with construction at appropriate spots and deduct money"))
+      # loop through values$land_use. Replace all to_build objects with the appropriate construction site
+      values$current_statistics$budget <- values$current_statistics$budget- values$building_cost
+      values$building_cost<-0
+      for (i in nrow(values$land_use)){
+        if (values$land_use[i,"type"]=="planned house"){
+          values$land_use[i,"type"]<-"house construction"
+          values$land_use[i,"remaining lease"]<-3
+        } else if(values$land_use[i,"type"]=="planned office"){
+          values$land_use[i,"type"]<-"office construction"
+          values$land_use[i,"remaining lease"]<-3
+        } else if(values$land_use[i,"type"]=="planned office"){
+          values$land_use[i,"type"]<-"office construction"
+          values$land_use[i,"remaining lease"]<-3
+        }
+      }
+      gridUpdater()
     }
   })
   
+  #USE CASE 6 TIME PROGRESS
+  observeEvent(input$progress, {
+    progressYears<- input$time
+    for (i in 1:progressYears){
+      
+    }
+  })
   
+}
+
+
+changeTab<- function(tab){
+  # insert function to change tab
+  dialogBox("page will now change to game screen")
+}
+
+gridUpdater <- function(){
+  # retrieve the values$land_use and update the appropriate html tags
+  dialogBox("to build locations are actually built")
 }
