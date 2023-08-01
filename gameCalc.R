@@ -23,8 +23,10 @@ gameCalc<-function(input,output,session,values){
         if (response!="success"){
           registerError<-paste0("Strange SQL error\n",response)
         }else{
-          values$username<-username
-          changeTab(gameTab)
+          values$current_statistics$username<-username
+          # assign default values and do a save
+          
+          changeTab(session)
           removeModal()
         }
       }
@@ -50,10 +52,10 @@ gameCalc<-function(input,output,session,values){
       if (response!="success"){
         loginError<-renderUI(paste0("Strange SQL error\n",response))
       }else{
-        values$username<-username
-        values$current_statistics<-findLatestStatistics(values$username)
-        values$land_use<-findLandUse(values$username)
-        changeTab(gameTab)
+        values$current_statistics$username<-username
+        values$current_statistics<-findLatestStatistics(values$current_statistics$username)
+        values$land_use<-findLandUse(values$current_statistics$username)
+        changeTab(session)
         removeModal()
       }
     }
@@ -158,28 +160,31 @@ gameCalc<-function(input,output,session,values){
   })
   
   
-  
-}
-
-
-changeTab<- function(tab){
-  # insert function to change tab
-  dialogBox("page will now change to game screen")
-  
-}
-
-progressBarUpdater<-function(){
-  dialogBox("move year progress bar")
-}
-gridUpdater <- function(){
-  # retrieve the values$land_use and update the appropriate html tags
-  dialogBox("to build locations are actually built")
-}
-goTotGameOver<- function(winning){
-  
-  if (!winning){
-    dialogBox("U lost. Also need a game over")
-  }else{
-    dialogBox("U win. Also need a game over") 
+  changeTab<- function(session){
+    # insert function to change tab
+    updateTabsetPanel(session,inputId="tabs",selected="Game Play")
+    print(values$current_statistics)
   }
+  
+  progressBarUpdater<-function(){
+    dialogBox("move year progress bar")
+  }
+  gridUpdater <- function(){
+    # retrieve the values$land_use and update the appropriate html tags
+    dialogBox("to build locations are actually built")
+  }
+  goTotGameOver<- function(winning){
+    
+    if (!winning){
+      dialogBox("U lost. Also need a game over")
+    }else{
+      dialogBox("U win. Also need a game over") 
+    }
+  }
+  
+  
+  
+  
+  
 }
+
