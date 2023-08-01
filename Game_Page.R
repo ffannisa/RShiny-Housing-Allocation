@@ -4,6 +4,22 @@ library(tidyverse)
 library(shinyWidgets)
 library(shinyjs)
 
+# Define a function to return the emoji based on happy_idx range
+get_emoji <- function(happy_idx) {
+  if (happy_idx >= 0 && happy_idx <= 25) {
+    return("😡")  # Mad face emoji
+  } else if (happy_idx > 25 && happy_idx <= 50) {
+    return("😠")  # Upset face emoji
+  } else if (happy_idx > 50 && happy_idx <= 75) {
+    return("😐")  # Neutral face emoji
+  } else if (happy_idx > 75 && happy_idx <= 100) {
+    return("😄")  # Happy face emoji
+  } else {
+    return("")  # Empty string if happy_idx is outside the defined ranges
+  }
+}
+
+
 ui <- fluidPage(
   # Add font and Game design template to use -> Nes.css
   # Link the external CSS file and fonts
@@ -86,15 +102,13 @@ ui <- fluidPage(
                         )
                  ),
                  br(),
-                 br(),
-                 br(),
                  column(width = 5,
-                        # Value Box 5 (Happiness)
-                        div(outputId = "box_5", class = "custom-value-box5",
-                            tags$div(class = "value-box-value", "20"),
-                            tags$div(class = "value-box-title", "Happiness")
+                        # Value Box 5 (Happiness) - Replaced with emoji image output
+                        # Add a text element to display the emoji based on the value of happy_idx
+                        tags$div(
+                          style = "font-size: 100px; text-align: center;",
+                          textOutput("emoji_output")
                         ),
-                        br(),
                         br(),
                         # Demolish button and other elements
                         wellPanel(
@@ -227,6 +241,20 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
+  
+  # Define the happy_idx value (you can set it to any number between 0-100)
+  # Need a numerical variable for the happiness index value
+  happy_idx <- 40
+  
+  # Reactive expression to get the emoji based on happy_idx
+  emoji <- reactive({
+    get_emoji(happy_idx)
+  })
+  
+  # Output the emoji in the UI
+  output$emoji_output <- renderText({
+    emoji()
+  })
   
   # Add any server-side functionality here if needed
   # Box 1
