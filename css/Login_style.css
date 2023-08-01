@@ -23,3 +23,9 @@ h1 {
   align-items: center;
   height: 100px;
 }
+
+/* Add the background image */
+body {
+  background-image: url('images/Login_BG.jpg');
+  background-size: cover;
+}
