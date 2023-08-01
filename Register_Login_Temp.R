@@ -114,7 +114,7 @@ ui <- fluidPage(
   ),
   
   # Link the external CSS file
-  includeCSS("Login_style.css"),
+  includeCSS("css/Login_style.css"),
   
   # Center the game title "Housing Hustlers" with spacing
   tags$div(
@@ -122,6 +122,8 @@ ui <- fluidPage(
     tags$h1("Housing Hustlers")
   ),
   
+
+    
   # Add buttons for Register and Login
   div(class = "btn-align",
       actionButton("register", label = "New Player", class = "nes-btn is-primary"),    
