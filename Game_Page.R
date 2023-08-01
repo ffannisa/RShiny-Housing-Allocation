@@ -39,32 +39,10 @@ server <- function(input, output,session) {
     )
   ))
   
-  output$image1<-renderUI(tags$image(src=images[1],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image2<-renderUI(tags$image(src=images[2],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image3<-renderUI(tags$image(src=images[3],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image4<-renderUI(tags$image(src=images[4],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image5<-renderUI(tags$image(src=images[5],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image6<-renderUI(tags$image(src=images[6],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image7<-renderUI(tags$image(src=images[7],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image8<-renderUI(tags$image(src=images[8],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image9<-renderUI(tags$image(src=images[9],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image10<-renderUI(tags$image(src=images[10],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image11<-renderUI(tags$image(src=images[11],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image12<-renderUI(tags$image(src=images[12],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image13<-renderUI(tags$image(src=images[13],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image14<-renderUI(tags$image(src=images[14],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image15<-renderUI(tags$image(src=images[15],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image16<-renderUI(tags$image(src=images[16],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image17<-renderUI(tags$image(src=images[17],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image18<-renderUI(tags$image(src=images[18],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image19<-renderUI(tags$image(src=images[19],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image20<-renderUI(tags$image(src=images[20],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image21<-renderUI(tags$image(src=images[21],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image22<-renderUI(tags$image(src=images[22],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image23<-renderUI(tags$image(src=images[23],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image24<-renderUI(tags$image(src=images[24],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image25<-renderUI(tags$image(src=images[25],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
-  output$image10<-renderUI(tags$image(src=images[10],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px"))
+  for (i in 1:25){
+    output[[paste0("image",i)]]<-renderUI(tags$image(src=images[i],ondrop = "drop(event)", ondragover = "allowDrop(event)",width="100px",height="100px",gridId=i))
+  }
+  
   
   
   # observeEvent(input$changeImage,{
@@ -87,7 +65,7 @@ server <- function(input, output,session) {
       event.preventDefault();
       var data = event.dataTransfer.getData('text');
       event.target.appendChild(document.getElementById(data));
-      var gridId = event.target.getAttribute('id');
+      var gridId = event.target.getAttribute('gridId');
       Shiny.setInputValue('dropId', gridId);
     }
   ")
@@ -95,13 +73,14 @@ server <- function(input, output,session) {
   observeEvent(input$dropId, {
     # Get the dropped element's ID
     dropId <- input$dropId
-    
-    # Update the grid ID with the dropped element's ID
-    if (!is.null(dropId)) {
-      jsCode <- paste0("$('#", dropId, "').attr('id', '",
-                       input$last_click$id, "');")
-      runjs(jsCode)
-    }
+    print(dropId)
+    # 
+    # # Update the grid ID with the dropped element's ID
+    # if (!is.null(dropId)) {
+    #   jsCode <- paste0("$('#", dropId, "').attr('id', '",
+    #                    input$last_click$id, "');")
+    #   runjs(jsCode)
+    # }
   })
 }
 

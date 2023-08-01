@@ -130,13 +130,34 @@ gameCalc<-function(input,output,session,values){
         
       }
       # update building related stats
-      values$current_statistics$employment<-min(values$current_statistics$population,50*values$land_use$type=="office building")
       values$current_statistics$homelessness<-max(0,values$current_statistics$population-(200*sum(values$land_use$type=="hdb_1")+400*sum(values$land_use$type=="hdb_2")))
-      for (i in 1:25){
-        placeHousing(values$username,values$land_use[i,"grid_number"],values$land_use[i,"type"],values$land_use[i,"remaining_lease"])
+      values$current_statistics$employment<-min(values$current_statistics$population,50*values$land_use$type=="office building")
+      
+      # saves
+      SaveCurrentLandUse(date.frame(
+                                    username=rep(values$username,25),
+                                    grid_number=values$land_use[,"grid_number"],
+                                    type=values$land_use[,"type"],
+                                    remaining_lease=values$land_use[,"remaining_lease"]
+                                    ))
+      saveGameStatistics(values$username,
+                         values$current_statistics$year,
+                         values$current_statistics$happiness,
+                         values$current_statistics$budget,
+                         values$current_statistics$population,
+                         values$current_statistics$homelessness,
+                         values$current_statistics$employment)
+      if (values$current_statistics$happiness<=0 | values$current_statistics$budget<=0){
+        break
+        goTotGameOver(FALSE)
+      }else if(values$current_statistics$year==999){
+        break
+        goTotGameOver(TRUE)
       }
     }
   })
+  
+  
   
 }
 
@@ -144,6 +165,7 @@ gameCalc<-function(input,output,session,values){
 changeTab<- function(tab){
   # insert function to change tab
   dialogBox("page will now change to game screen")
+  
 }
 
 progressBarUpdater<-function(){
@@ -152,4 +174,12 @@ progressBarUpdater<-function(){
 gridUpdater <- function(){
   # retrieve the values$land_use and update the appropriate html tags
   dialogBox("to build locations are actually built")
+}
+goTotGameOver<- function(winning){
+  
+  if (!winning){
+    dialogBox("U lost. Also need a game over")
+  }else{
+    dialogBox("U win. Also need a game over") 
+  }
 }
