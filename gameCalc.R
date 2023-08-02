@@ -69,12 +69,17 @@ gameCalc<-function(input,output,session,values){
   # receive input from drag and drop
   observeEvent(input$new_land_use,{
     new_land_use<-stringr::str_split(input$new_land_use,",")
-    grid_number<-new_land_use[1]
-    if (values$current_land_use$type[values$current_land_use$grid_number==grid_number]!="empty"){
+    
+    grid_number<-as.numeric(new_land_use[[1]][1])
+    
+    
+    if (values$land_use$type[values$land_use$grid_number==(grid_number)]!="empty"){
       dialogBox("There is already something here!")
       return()
     }
-    type<-paste0("planned ",new_land_use[2])
+    
+    type<-paste0("planned ",new_land_use[[1]][2])
+    
     if (type=="planned hdb_1"){
       remaining_lease=3
     } else if(type=="planned hdb_2"){
@@ -87,7 +92,7 @@ gameCalc<-function(input,output,session,values){
       dialogBox("strange shizzles happening")
       remaining_lease=-1
     }
-    values$current_land_use[values$current_land_use$grid_number==grid_number,]<-data.frame(grid_number=grid_number,type=type,remaining_lease=remaining_lease)
+    values$land_use[values$land_use$grid_number==grid_number,]<-data.frame(grid_number=grid_number,type=type,remaining_lease=remaining_lease)
     gridUpdater()
   })
   
@@ -198,6 +203,7 @@ gameCalc<-function(input,output,session,values){
     # retrieve the values$land_use and update values$images[i]
     for (i in 1:25){
       land_use<-values$land_use$type[i]
+      print(land_use)
       if (land_use=="empty"){
         values$images[i]<-image_empty
       }else if(land_use=="planned hdb_1"){
@@ -223,7 +229,7 @@ gameCalc<-function(input,output,session,values){
       }
       
     }
-
+    # print(values$images)
   }
   goTotGameOver<- function(winning){
     

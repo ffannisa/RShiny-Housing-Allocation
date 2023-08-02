@@ -11,7 +11,7 @@ library(shiny)
 source("databaseFunctions.R")
 source("templates.R")
 
-
+source("images.R")
 
 
 
@@ -19,19 +19,20 @@ source("templates.R")
 function(input, output, session) {
   
   
-  
+  image_hdb1
   # define stored values !!! THIS DATA IS PLACEHOLDER FOR TESTING
   values<-reactiveValues(username=NULL,
                          current_statistics=data.frame(year=c(1),happiness=c(1),budget=c(1000),population=c(10),homelessness=c(0),employment=c(0)),
                          land_use=data.frame(grid_number=c(1:25),type=rep("empty",25),remaining_lease=rep(-1,25)),
                          building_cost=2000,
-                         images=rep("https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",25))
+                         images=c(image_hdb1,image_hdb2,image_office,image_construction,image_demolition,image_empty,image_park,image_planned_hdb1,rep(image_empty,13)))
   
   # UI functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
   # Output for grid image
   for (i in 1:25){
-    output[[paste0("grid", i)]] <- renderUI(tags$img(src=values$images[i],ondragover="allowDrop(event)",ondrop="drop(event)", location = i))
+    # observe(print(values$images[i]))
+    output[[paste0("grid", i)]] <- renderUI(tags$img(src=values$images[i],ondragover="allowDrop(event)",ondrop="drop(event)", location = i, width="100",height="100"))
   }
   
   # Drag-and-Drop functionality
@@ -51,7 +52,7 @@ function(input, output, session) {
   
   
   get_emoji <- function(happy_idx) {
-    print(happy_idx)
+    # print(happy_idx)
     if (happy_idx >= 0 && happy_idx <= 25) {
       return("😡")  # Mad face emoji
     } else if (happy_idx > 25 && happy_idx <= 50) {
