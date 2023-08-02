@@ -30,7 +30,6 @@ loginModal <- function(failed = FALSE) {
     passwordInput("loginPassword", "Enter your password:"),
     if (failed)
       div(tags$b("There is no registered player with that name and password. Try again or re-register.", style = "color: red;")),
-    
     footer = tagList(
       modalButton("Cancel"),
       actionButton("loginButton", "OK")
