@@ -193,17 +193,8 @@ fluidPage(
               function drop(event) {
                 event.preventDefault();
                 var type = event.dataTransfer.getData("Text");
-                var img = document.createElement("img");
-                img.style.maxWidth = "100%";
-                img.style.maxHeight = "100%";
-                event.target.innerHTML = "";
-                var grid = event.target;
-                while (grid.className !== "plot") {
-                  grid = grid.parentNode;
-                }
-                grid.innerHTML = "";
-                grid.appendChild(img);
-                var gridnumber = grid.getAttribute("location");
+                var image = event.target;
+                var gridnumber = image.getAttribute("location");
                 const result = String(gridnumber) + "," + type;
                 console.log(result);
                 Shiny.setInputValue("new_land_use", result);

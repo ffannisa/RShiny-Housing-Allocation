@@ -223,6 +223,7 @@ gameCalc<-function(input,output,session,values){
       }else if(land_use=="office"){
         values$images[i]<-image_office
       }else if(land_use=="park"){
+        print("this is a park")
         values$images[i]<-image_park
       }else{
         stop(paste0("Funky land use alert at row",i))
