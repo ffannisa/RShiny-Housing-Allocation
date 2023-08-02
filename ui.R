@@ -1,11 +1,3 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
 library(shiny)
 library(shinydashboard)
 library(tidyverse)
@@ -13,7 +5,7 @@ library(shinyWidgets)
 library(shinyjs)
 
 source("images.R")
-
+source("building_cost_module.R")
 
 fluidPage(
   # Add font and Game design template to use -> Nes.css
@@ -168,7 +160,7 @@ fluidPage(
                               column(7, actionButton("progress", label = "Progress!", class = "nes-btn is-warning"))
                             )
                           )
-                        )  
+                        )
                  )
                ),
                br(),
@@ -183,7 +175,8 @@ fluidPage(
                               column(2, tags$img(id="img2",type="hdb_2",draggable="true",ondragstart="dragStart(event)",src=image_hdb2, alt="House 2", width=100, height=100), strong('HDB 2')),
                               column(2, tags$img(id="img3",type="office",draggable="true",ondragstart="dragStart(event)",src=image_office, alt="Office", width=100, height=100), strong('Office')),
                               column(2, tags$img(id="img4",type="park",draggable="true",ondragstart="dragStart(event)",src=image_park, alt="Park", width=100,height=100), strong('Park')),
-                              column(2, strong('Additional Content 5')),
+                              column(2, # Include the buildingCostModuleUI here
+                                     buildingCostModuleUI("building_cost")),
                               column(2, actionButton("build", label = "Build!", class = "nes-btn is-success")),
                               tags$script('
               function dragStart(event) {event.dataTransfer.setData("Text", event.target.getAttribute("type"));}
