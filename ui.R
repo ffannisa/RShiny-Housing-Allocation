@@ -138,7 +138,7 @@ fluidPage(
                                      tags$div(id = "board",
                                               tags$div(id = "overlay", class = "grid-container",
                                                        lapply(1:25, function(i) {
-                                                         tags$span(class = "plot",
+                                                         tags$span(class = "plot",location = i,
                                                                    uiOutput(paste0("grid", i)))
                                                        })
                                               ),
