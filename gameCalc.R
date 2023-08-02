@@ -1,5 +1,5 @@
 source("databaseFunctions.R")
-
+source("images.R")
 
 
 gameCalc<-function(input,output,session,values){
@@ -66,6 +66,31 @@ gameCalc<-function(input,output,session,values){
     }
   })
   
+  # receive input from drag and drop
+  observeEvent(input$new_land_use,{
+    new_land_use<-stringr::str_split(input$new_land_use,",")
+    grid_number<-new_land_use[1]
+    if (values$current_land_use$type[values$current_land_use$grid_number==grid_number]!="empty"){
+      dialogBox("There is already something here!")
+      return()
+    }
+    type<-paste0("planned ",new_land_use[2])
+    if (type=="planned hdb_1"){
+      remaining_lease=3
+    } else if(type=="planned hdb_2"){
+      remaining_lease=5
+    } else if(type=="planned office"){
+      remaining_lease=1
+    }else if(type=="planned park"){
+      remaining_lease=2
+    } else{
+      dialogBox("strange shizzles happening")
+      remaining_lease=-1
+    }
+    values$current_land_use[values$current_land_use$grid_number==grid_number,]<-data.frame(grid_number=grid_number,type=type,remaining_lease=remaining_lease)
+    gridUpdater()
+  })
+  
   
   #USE CASE 5 SELECTION CONFIRMATION
   observeEvent(input$build,{
@@ -77,14 +102,17 @@ gameCalc<-function(input,output,session,values){
       values$current_statistics$budget <- values$current_statistics$budget- values$building_cost
       values$building_cost<-0
       for (i in nrow(values$land_use)){
-        if (values$land_use[i,"type"]=="planned house"){
-          values$land_use[i,"type"]<-"hdb_1 construction"
+        if (values$land_use[i,"type"]=="planned hdb_1"){
+          values$land_use[i,"type"]<-"construction hdb_1"
+          values$land_use[i,"remaining lease"]<-3
+        }else if(values$land_use[i,"type"]=="planned hdb_2"){
+          values$land_use[i,"type"]<-"construction hdb_2"
+          values$land_use[i,"remaining lease"]<-3
+        }else if(values$land_use[i,"type"]=="planned office"){
+          values$land_use[i,"type"]<-"construction office"
           values$land_use[i,"remaining lease"]<-3
         } else if(values$land_use[i,"type"]=="planned office"){
-          values$land_use[i,"type"]<-"office construction"
-          values$land_use[i,"remaining lease"]<-3
-        } else if(values$land_use[i,"type"]=="planned office"){
-          values$land_use[i,"type"]<-"office construction"
+          values$land_use[i,"type"]<-"construction office"
           values$land_use[i,"remaining lease"]<-3
         }
       }
@@ -112,21 +140,18 @@ gameCalc<-function(input,output,session,values){
             values$land_use$remaining_lease[i]<-1  
           }else if (values$land_use$type=="demolition"){
             values$land_use$type<-"empty"
-          }else if (values$land_use$type=="hdb_1 construction"){
+          }else if (values$land_use$type=="construction hdb_1"){
             values$land_use$type<-"hdb_1"
             values$land_use$remaining_lease[i]<-99  
-          }else if (values$land_use$type=="hdb_2 construction"){
+          }else if (values$land_use$type=="construction hdb_2"){
             values$land_use$type<-"hdb_2"
             values$land_use$remaining_lease[i]<-99  
-          }else if (values$land_use$type=="office construction"){
+          }else if (values$land_use$type=="construction office"){
             values$land_use$type<-"office"
             values$land_use$remaining_lease[i]<-10
-          }else if (values$land_use$type=="park construction"){
+          }else if (values$land_use$type=="construction park"){
             values$land_use$type<-"park"
             values$land_use$remaining_lease[i]<-5
-          }else if (values$land_use$type=="hdb_1 construction"){
-            values$land_use$type<-"hdb_1"
-            values$land_use$remaining_lease[i]<-99  
           }
         }
         
@@ -166,12 +191,39 @@ gameCalc<-function(input,output,session,values){
     print(values$current_statistics)
   }
   
-  progressBarUpdater<-function(){
-    dialogBox("move year progress bar")
-  }
+  # progressBarUpdater<-function(){
+  #   dialogBox("move year progress bar")
+  # }
   gridUpdater <- function(){
-    # retrieve the values$land_use and update the appropriate html tags
-    dialogBox("to build locations are actually built")
+    # retrieve the values$land_use and update values$images[i]
+    for (i in 1:25){
+      land_use<-values$land_use$type[i]
+      if (land_use=="empty"){
+        values$images[i]<-image_empty
+      }else if(land_use=="planned hdb_1"){
+        values$images[i]<-image_planned_hdb1
+      }else if(land_use=="planned hdb_2"){
+        values$images[i]<-image_planned_hdb2
+      }else if(land_use=="planned office"){
+        values$images[i]<-image_planned_office
+      }else if(land_use=="planned park"){
+        values$images[i]<-image_planned_park
+      }else if(substr(land_use,1,12)=="construction"){
+        values$images[i]<-image_construction
+      }else if(land_use=="hdb_1"){
+        values$images[i]<-image_hdb1
+      }else if(land_use=="hdb_2"){
+        values$images[i]<-image_hdb2
+      }else if(land_use=="office"){
+        values$images[i]<-image_office
+      }else if(land_use=="park"){
+        values$images[i]<-image_park
+      }else{
+        stop(paste0("Funky land use alert at row",i))
+      }
+      
+    }
+
   }
   goTotGameOver<- function(winning){
     

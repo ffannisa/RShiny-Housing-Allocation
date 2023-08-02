@@ -176,7 +176,7 @@ fluidPage(
                         wellPanel(
                           verticalLayout(
                             fluidRow(
-                              column(2, strong('Additional Content 1')), 
+                              column(2, ), 
                               column(2, strong('Additional Content 2')),
                               column(2, strong('Additional Content 3')),
                               column(2, strong('Additional Content 4')),
