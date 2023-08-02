@@ -1,5 +1,5 @@
-image_path1<-"images/house_1.png"
-image_path2<-"images/house_2.png"
+image_path1<-"images/house_2.png"
+image_path2<-"images/house_3.png"
 image_path3<-"images/office.png"
 image_path4<-"images/park.png"
 image_path5<-"images/demolition.png"
