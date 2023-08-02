@@ -163,7 +163,7 @@ fluidPage(
                             fluidRow(
                               column(5, strong('Year')), 
                               br(),
-                              column(12, sliderInput(inputId = "", label = NULL, min = 0, max = 10, value = 5, step = 5)),
+                              column(12, sliderInput(inputId = "time", label = NULL, min = 1, max = 10, value = 5)),
                               br(),
                               column(7, actionButton("progress", label = "Progress!", class = "nes-btn is-warning"))
                             )

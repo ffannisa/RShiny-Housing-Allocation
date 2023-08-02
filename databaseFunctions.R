@@ -207,12 +207,13 @@ SaveCurrentLanduse <- function(data) {
     message <- "Data is empty. No records to save."
     return(message)
   }
-  
+  print("start delete")
   # First, delete any existing records for the given username
   username <- unique(data$username)
   query_delete <- sqlInterpolate(conn, "DELETE FROM current_land_use WHERE username = ?id1;", id1 = username)
   dbExecute(conn, query_delete)
   
+  print("start insert")
   # Then, insert the new records into the current_land_use table
   query_insert <- "INSERT INTO current_land_use (username, grid_number, type, remaining_lease) VALUES "
   for (i in 1:nrow(data)) {

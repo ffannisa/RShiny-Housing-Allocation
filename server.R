@@ -22,9 +22,9 @@ function(input, output, session) {
   images<-c(rep(image_empty,25))
   # define stored values !!! THIS DATA IS PLACEHOLDER FOR TESTING
   values<-reactiveValues(username=NULL,
-                         current_statistics=data.frame(year=c(1),happiness=c(1),budget=c(1000),population=c(10),homelessness=c(0),employment=c(0)),
+                         current_statistics=data.frame(year=c(1),happiness=c(1),budget=c(9999999999),population=c(10),homelessness=c(0),employment=c(0)),
                          land_use=data.frame(grid_number=c(1:25),type=rep("empty",25),remaining_lease=rep(-1,25)),
-                         building_cost=2000,
+                         building_cost=0,
                          images=images
                          )
   
@@ -59,14 +59,10 @@ function(input, output, session) {
   
    
   
-  # Drag-and-Drop functionality
-  observeEvent(input$new_land_use, {
-    new_land_use <- input$new_land_use
-    print(new_land_use)
-  })
+  
   # Show passwordModal
   observeEvent(input$register, {
-    showModal(passwordModal(failed=FALSE))
+    showModal(passwordModal())
   })
   
   # Show loginModal
