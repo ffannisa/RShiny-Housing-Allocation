@@ -12,19 +12,7 @@ library(tidyverse)
 library(shinyWidgets)
 library(shinyjs)
 
-
-# Read the image file and encode it to base64
-image_path1 <- "C:\\Users\\user\\Desktop\\Term 5\\Engineering Systems Architecture\\2d project\\RShiny-Housing-Allocation\\images\\house_2.png"
-image_hdb1 <- base64enc::dataURI(file = image_path1, mime = "image/png")
-
-image_path2 <- "C:\\Users\\user\\Desktop\\Term 5\\Engineering Systems Architecture\\2d project\\RShiny-Housing-Allocation\\images\\house_3.png"
-image_hdb2 <- base64enc::dataURI(file = image_path2, mime = "image/png")
-
-image_path3 <- "C:\\Users\\user\\Desktop\\Term 5\\Engineering Systems Architecture\\2d project\\RShiny-Housing-Allocation\\images\\office.png"
-image_office <- base64enc::dataURI(file = image_path3, mime = "image/png")
-
-image_path4 <- "C:\\Users\\user\\Desktop\\Term 5\\Engineering Systems Architecture\\2d project\\RShiny-Housing-Allocation\\images\\park.png"
-image_park <- base64enc::dataURI(file = image_path4, mime = "image/png")
+source("images.R")
 
 
 fluidPage(
