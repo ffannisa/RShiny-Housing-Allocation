@@ -73,7 +73,7 @@ gameCalc<-function(input,output,session,values){
     grid_number<-as.numeric(new_land_use[[1]][1])
     
     
-    if (values$land_use$type[values$land_use$grid_number==(grid_number)]!="empty"){
+    if (values$land_use$type[values$land_use$grid_number==(grid_number)]!="empty" & substr(values$land_use$type[values$land_use$grid_number==(grid_number)],1,7)!="planned"){
       dialogBox("There is already something here!")
       return()
     }
@@ -102,7 +102,7 @@ gameCalc<-function(input,output,session,values){
     if(values$current_statistics$budget <values$building_cost){
       showModal(dialogBox("You do not have enough money"))
     }else if(values$current_statistics$budget >=values$building_cost){
-      showModal(dialogBox("replace land use with construction at appropriate spots and deduct money"))
+      
       # loop through values$land_use. Replace all to_build objects with the appropriate construction site
       values$current_statistics$budget <- values$current_statistics$budget- values$building_cost
       values$building_cost<-0
