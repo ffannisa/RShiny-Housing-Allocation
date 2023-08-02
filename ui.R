@@ -13,6 +13,19 @@ library(shinyWidgets)
 library(shinyjs)
 
 
+# Read the image file and encode it to base64
+image_path1 <- "C:\\Users\\user\\Desktop\\Term 5\\Engineering Systems Architecture\\2d project\\RShiny-Housing-Allocation\\images\\house_2.png"
+image_hdb1 <- base64enc::dataURI(file = image_path1, mime = "image/png")
+
+image_path2 <- "C:\\Users\\user\\Desktop\\Term 5\\Engineering Systems Architecture\\2d project\\RShiny-Housing-Allocation\\images\\house_3.png"
+image_hdb2 <- base64enc::dataURI(file = image_path2, mime = "image/png")
+
+image_path3 <- "C:\\Users\\user\\Desktop\\Term 5\\Engineering Systems Architecture\\2d project\\RShiny-Housing-Allocation\\images\\office.png"
+image_office <- base64enc::dataURI(file = image_path3, mime = "image/png")
+
+image_path4 <- "C:\\Users\\user\\Desktop\\Term 5\\Engineering Systems Architecture\\2d project\\RShiny-Housing-Allocation\\images\\park.png"
+image_park <- base64enc::dataURI(file = image_path4, mime = "image/png")
+
 
 fluidPage(
   # Add font and Game design template to use -> Nes.css
@@ -50,6 +63,7 @@ fluidPage(
                includeCSS("css/Login_style.css"),
                
                # Center the game title "Housing Hustlers" with spacing
+               # ask FANNISA IF THE NEXT 4 LINES OF CODE IS NEEDED?
                tags$div(
                  style = "text-align: center; margin-top: 50px;",
                  tags$h1("Housing Hustlers")
@@ -124,7 +138,8 @@ fluidPage(
                                      tags$div(id = "board",
                                               tags$div(id = "overlay", class = "grid-container",
                                                        lapply(1:25, function(i) {
-                                                         tags$span(class = "plot")
+                                                         tags$span(class = "plot",
+                                                                   uiOutput(paste0("grid", i)))
                                                        })
                                               ),
                                               tags$div(id = "plants"),
@@ -176,12 +191,36 @@ fluidPage(
                         wellPanel(
                           verticalLayout(
                             fluidRow(
-                              column(2, ), 
-                              column(2, strong('Additional Content 2')),
-                              column(2, strong('Additional Content 3')),
-                              column(2, strong('Additional Content 4')),
+                              column(2, tags$img(id="img",type="hdb_1",draggable="true",ondragstart="dragStart(event)",src=image_hdb1, alt="House 1", width=100, height=100), strong('HDB 1')), 
+                              column(2, tags$img(id="img2",type="hdb_2",draggable="true",ondragstart="dragStart(event)",src=image_hdb2, alt="House 2", width=100, height=100), strong('HDB 2')),
+                              column(2, tags$img(id="img3",type="office",draggable="true",ondragstart="dragStart(event)",src=image_office, alt="Office", width=100, height=100), strong('Office')),
+                              column(2, tags$img(id="img4",type="park",draggable="true",ondragstart="dragStart(event)",src=image_park, alt="Park", width=100,height=100), strong('Park')),
                               column(2, strong('Additional Content 5')),
                               column(2, actionButton("build", label = "Build!", class = "nes-btn is-success")),
+                              tags$script('
+              function dragStart(event) {event.dataTransfer.setData("Text", event.target.getAttribute("type"));}
+              
+              function allowDrop(event) {event.preventDefault();}
+              
+              function drop(event) {
+                event.preventDefault();
+                var type = event.dataTransfer.getData("Text");
+                var img = document.createElement("img");
+                img.style.maxWidth = "100%";
+                img.style.maxHeight = "100%";
+                event.target.innerHTML = "";
+                var grid = event.target;
+                while (grid.className !== "plot") {
+                  grid = grid.parentNode;
+                }
+                grid.innerHTML = "";
+                grid.appendChild(img);
+                var gridnumber = grid.getAttribute("location");
+                const result = String(gridnumber) + "," + type;
+                console.log(result);
+                Shiny.setInputValue("new_land_use", result);
+              }
+              ')
                             )
                           )
                         )

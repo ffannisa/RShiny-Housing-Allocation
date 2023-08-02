@@ -25,10 +25,20 @@ function(input, output, session) {
                          current_statistics=data.frame(year=c(1),happiness=c(1),budget=c(1000),population=c(10),homelessness=c(0),employment=c(0)),
                          land_use=data.frame(grid_number=c(1:25),type=rep("empty",25),remaining_lease=rep(-1,25)),
                          building_cost=2000,
-                         images=rep(NULL,25))
+                         images=rep("https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",25))
   
   # UI functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
+  # Output for grid image
+  for (i in 1:25){
+    output[[paste0("grid", i)]] <- renderUI(tags$img(src=values$images[i],ondragover="allowDrop(event)",ondrop="drop(event)", location = i))
+  }
+  
+  # Drag-and-Drop functionality
+  observeEvent(input$new_land_use, {
+    new_land_use <- input$new_land_use
+    print(new_land_use)
+  })
   # Show passwordModal
   observeEvent(input$register, {
     showModal(passwordModal(failed=FALSE))
