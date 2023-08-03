@@ -38,6 +38,15 @@ loginModal <- function(failed = FALSE) {
   )
 }
 
+leaderboardModal <- function(failed = FALSE) {
+  modalDialog(
+    title = "Leaderboard",
+    selectInput("leaderboard_table", "Choose leaderboard:", choices = c("Year", "Happiness", "Budget", "Employment", "Homelessness", "Population")),
+    tableOutput(outputId = "leaderboard_table"),
+  )
+}
+
+
 dialogBox<- function(t="abababababa"){
   modalDialog(
     t,
@@ -58,5 +67,7 @@ demolishConfirm<- function(gridnumber,type,demolish_cost,demolish_time){
     )
   )
 }
+
+
 
 

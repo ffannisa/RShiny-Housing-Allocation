@@ -95,7 +95,7 @@ uiGame <- fluidPage(
                  column(width = 3,
                         div(outputId = "box_2", class = "custom-value-box2",
                             tags$div(class = "value-box-value", uiOutput("employmentValueGP")),
-                            tags$div(class = "value-box-title", "Employed")
+                            tags$div(class = "value-box-title", "Employment")
                         )
                  ),
                  
@@ -103,7 +103,7 @@ uiGame <- fluidPage(
                  column(width = 3,
                         div(outputId = "box_3", class = "custom-value-box3",
                             tags$div(class = "value-box-value", uiOutput("homelessnessValueGP")),
-                            tags$div(class = "value-box-title", "Homeless")
+                            tags$div(class = "value-box-title", "Homelessness")
                         )
                  ),
                  
@@ -161,7 +161,7 @@ uiGame <- fluidPage(
                             fluidRow(
                               column(5, strong('Year')), 
                               br(),
-                              column(12, sliderInput(inputId = "", label = NULL, min = 0, max = 10, value = 5, step = 5)),
+                              column(12, sliderInput(inputId = "time", label = NULL, min = 0, max = 10, value = 5, step = 5)),
                               br(),
                               column(7, actionButton("progress", label = "Progress!", class = "nes-btn is-warning"))
                             )
@@ -245,7 +245,7 @@ uiGame <- fluidPage(
                  column(width = 3,
                         div(outputId = "box_2", class = "custom-value-box2",
                             tags$div(class = "value-box-value", uiOutput("employmentValueST")),
-                            tags$div(class = "value-box-title", "Employed")
+                            tags$div(class = "value-box-title", "Employment")
                         )
                  ),
                  
@@ -253,7 +253,7 @@ uiGame <- fluidPage(
                  column(width = 3,
                         div(outputId = "box_3", class = "custom-value-box3",
                             tags$div(class = "value-box-value", uiOutput("homelessnessValueST")),
-                            tags$div(class = "value-box-title", "Homeless")
+                            tags$div(class = "value-box-title", "Homelessness")
                         )
                  ),
                  
@@ -570,6 +570,14 @@ function(input, output, session) {
   observeEvent(input$login, {
     showModal(loginModal(failed = FALSE))
   })
+  
+  # Show leaderboardModal
+  observeEvent(input$leaderboard, {
+    showModal(leaderboardModal(failed = FALSE))
+  })
+  
+  # Output leaderboard table
+  output$leaderboard_table <- renderTable(sort_leaderboard(sort_by = input$leaderboard_table))
   
   get_emoji <- function(happy_idx) {
     if (happy_idx >= 0 && happy_idx <= 25) {
