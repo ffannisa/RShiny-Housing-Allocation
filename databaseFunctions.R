@@ -272,57 +272,80 @@ removeStructure <- function(username, grid_number) {
   return(message)
 }
 
-# NEEDS SOME WORK HAHA
-RetrieveLeaderboard <- function(usernames) {
+
+
+CreateLeaderboardEntry <- function(username) {
   # Connect to the database using the getAWSConnection function
   conn <- getAWSConnection()
   
   # Prepare the query template to insert data into the leaderboard table
   query_template <- "INSERT INTO leaderboard (username, happiness, budget, population, homelessness, employment) VALUES ('%s', %d, %d, %d, %d, %d)"
   
-  # Iterate through each username in the vector
-  for (username in usernames) {
-    # Get the latest statistics for the current username
-    latest_stats <- findLatestStatistics(username)
-    print(latest_stats)
+
+  # Get the latest statistics for the current username
+  latest_stats <- findLatestStatistics(username)
+  print(latest_stats)
     
-    # Check if the latest_stats data frame is not empty
-    if (nrow(latest_stats) == 0) {
-      # If there is no data for the current username, skip to the next username
-      cat(paste("No data found for username:", username, ". Skipping...\n"))
-      next
-    }
-    
-    
-    # Iterate through the rows of the data frame and insert data into the leaderboard table
-    for (i in 1:nrow(latest_stats)) {
-    
-      query <- sprintf(query_template,
-                       username = username,
-                       happiness = latest_stats$happiness[i],
-                       budget = latest_stats$budget[i],
-                       population = latest_stats$population[i],
-                       homelessness = latest_stats$homelessness[i],
-                       employment = latest_stats$employment[i]
-                       )
-      print(query)
-      
-      # Execute the query to insert the data into the leaderboard table
-      dbExecute(conn, query)
-    }
-    
-    cat(paste("Data for username:", username, "has been saved in the leaderboard table.\n"))
+  # Check if the latest_stats data frame is not empty
+  if (nrow(latest_stats) == 0) {
+    # If there is no data for the current username, skip to the next username
+    cat(paste("No data found for username:", username, ". Skipping...\n"))
+    stop("This username has no data.")
   }
+    
+    
+    
+  query <- sprintf(query_template,
+                   username = username,
+                   happiness = latest_stats$happiness,
+                   budget = latest_stats$budget,
+                   population = latest_stats$population,
+                   homelessness = latest_stats$homelessness,
+                   employment = latest_stats$employment
+  )
+  print(query)
+      
+  # Execute the query to insert the data into the leaderboard table
+  dbExecute(conn, query)
   
+  cat(paste("Data for username:", username, "has been saved in the leaderboard table.\n"))
+
+
   # Disconnect from the database
   dbDisconnect(conn)
-  
+
   # Return the success message
   message <- "All data has been saved successfully in the leaderboard table."
   return(message)
 }
 
+sort_leaderboard <- function(sort_by) {
+  conn <- getAWSConnection()
+  
+  # Define the sorting order for each metric
+  sort_order <- ifelse(sort_by == "homelessness", "ASC", "DESC")
+  print(sort_order)
+  
+  # Construct the query to sort the leaderboard by the specified metric
+  
+  # "DELETE FROM current_land_use WHERE username = ?id1 AND grid_number = ?id2;", id1 = username, id2 = grid_number)
+  sort_query <- sqlInterpolate(conn, 
+                          "SELECT username, happiness, budget, population, homelessness, employment
+                           FROM leaderboard
+                           ORDER BY ?sort_by ?sort_order", sort_by= SQL(sort_by), sort_order=SQL(sort_order))
+  print(sort_query)
+  
+  # Execute the query and get the sorted leaderboard
+  sorted_leaderboard <- dbGetQuery(conn, sort_query)
+  print(sorted_leaderboard)
+  
+  dbDisconnect(conn)
+  
+  return(sorted_leaderboard)
+}
 
+
+      
 
 # Vivek's AWS
 # dbname = "student034",
