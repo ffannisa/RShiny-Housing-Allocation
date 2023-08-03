@@ -317,10 +317,35 @@ CreateLeaderboardEntry <- function(username) {
   # Return the success message
   message <- "All data has been saved successfully in the leaderboard table."
   return(message)
-    }
+}
+
+sort_leaderboard <- function(sort_by) {
+  conn <- getAWSConnection()
+  
+  # Define the sorting order for each metric
+  sort_order <- ifelse(sort_by == "homelessness", "ASC", "DESC")
+  print(sort_order)
+  
+  # Construct the query to sort the leaderboard by the specified metric
+  
+  # "DELETE FROM current_land_use WHERE username = ?id1 AND grid_number = ?id2;", id1 = username, id2 = grid_number)
+  sort_query <- sqlInterpolate(conn, 
+                          "SELECT username, happiness, budget, population, homelessness, employment
+                           FROM leaderboard
+                           ORDER BY ?sort_by ?sort_order", sort_by= SQL(sort_by), sort_order=SQL(sort_order))
+  print(sort_query)
+  
+  # Execute the query and get the sorted leaderboard
+  sorted_leaderboard <- dbGetQuery(conn, sort_query)
+  print(sorted_leaderboard)
+  
+  dbDisconnect(conn)
+  
+  return(sorted_leaderboard)
+}
+
 
       
-
 
 # Vivek's AWS
 # dbname = "student034",
