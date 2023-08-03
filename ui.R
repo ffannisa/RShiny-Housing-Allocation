@@ -160,7 +160,9 @@ fluidPage(
                               column(7, actionButton("progress", label = "Progress!", class = "nes-btn is-warning"))
                             )
                           )
-                        )
+                        ),
+                        # Include the building cost elements here
+                        uiOutput("building_cost_ui")
                  )
                ),
                br(),
@@ -171,11 +173,12 @@ fluidPage(
                         wellPanel(
                           verticalLayout(
                             fluidRow(
-                              column(2, tags$img(id="img",type="hdb_1",draggable="true",ondragstart="dragStart(event)",src=image_hdb1, alt="House 1", width=100, height=100), strong('HDB 1')), 
-                              column(2, tags$img(id="img2",type="hdb_2",draggable="true",ondragstart="dragStart(event)",src=image_hdb2, alt="House 2", width=100, height=100), strong('HDB 2')),
-                              column(2, tags$img(id="img3",type="office",draggable="true",ondragstart="dragStart(event)",src=image_office, alt="Office", width=100, height=100), strong('Office')),
-                              column(2, tags$img(id="img4",type="park",draggable="true",ondragstart="dragStart(event)",src=image_park, alt="Park", width=100,height=100), strong('Park')),
-                              column(2, # Include the buildingCostModuleUI here
+                              column(2, tags$img(id="img",type="hdb_1",draggable="true",ondragstart="dragStart(event)",src=image_hdb1, alt="House 1", width=100, height=100, strong('HDB 1'))), 
+                              column(2, tags$img(id="img2",type="hdb_2",draggable="true",ondragstart="dragStart(event)",src=image_hdb2, alt="House 2", width=100, height=100, strong('HDB 2'))),
+                              column(2, tags$img(id="img3",type="office",draggable="true",ondragstart="dragStart(event)",src=image_office, alt="Office", width=100, height=100, strong('Office'))),
+                              column(2, tags$img(id="img4",type="park",draggable="true",ondragstart="dragStart(event)",src=image_park, alt="Park", width=100, height=100, strong('Park'))),
+                              column(2, width=8.7, height=12,
+                                     # Include the buildingCostModuleUI here
                                      buildingCostModuleUI("building_cost")),
                               column(2, actionButton("build", label = "Build!", class = "nes-btn is-success")),
                               tags$script('
