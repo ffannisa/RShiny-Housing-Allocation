@@ -161,7 +161,7 @@ uiGame <- fluidPage(
                             fluidRow(
                               column(5, strong('Year')), 
                               br(),
-                              column(12, sliderInput(inputId = "", label = NULL, min = 0, max = 10, value = 5, step = 5)),
+                              column(12, sliderInput(inputId = "time", label = NULL, min = 1, max = 10, value = 1)),
                               br(),
                               column(7, actionButton("progress", label = "Progress!", class = "nes-btn is-warning"))
                             )
@@ -345,7 +345,10 @@ function(input, output, session) {
     current_statistics = data.frame(year = c(1), happiness = c(1), budget = c(1000), population = c(10), homelessness = c(0), employment = c(0)),
     land_use = data.frame(grid_number = c(1:25), type = rep("empty", 25), remaining_lease = rep(-1, 25)),
     building_cost = 25,
-    images = images
+    images = images,
+    demolish_gridnumber=0,
+    demolish_cost=0,
+    demolish_time=0
   )
   
   # Render dynamic budget
@@ -572,6 +575,7 @@ function(input, output, session) {
   })
   
   get_emoji <- function(happy_idx) {
+    print(paste0("Happiness: ",happy_idx))
     if (happy_idx >= 0 && happy_idx <= 25) {
       return("😡")  # Mad face emoji
     } else if (happy_idx > 25 && happy_idx <= 50) {

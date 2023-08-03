@@ -310,6 +310,14 @@ RetrieveLeaderboard <- function(username) {
   return(message)
 }
 
+CreateLeaderboardEntry<-function(username, year, happiness, budget, population, homelessness, employment){
+  # enter end of game score into leaderboard
+  return()
+}
+ClearStatistics<-function(username){
+  # Wipe out historic data for that username
+  return()
+}
 
 
 # Vivek's AWS

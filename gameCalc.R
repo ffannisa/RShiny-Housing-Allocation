@@ -160,6 +160,7 @@ gameCalc<-function(input,output,session,values){
       values$current_statistics$employment<-min(values$current_statistics$population,50*sum(values$land_use$type=="office"))
       print(values$current_statistics)
       # saves
+      print(values$land_use)
       a=SaveCurrentLanduse(cbind(username=rep(values$username,25),values$land_use))
       print(a)
       saveGameStatistics(values$username,
@@ -245,6 +246,10 @@ gameCalc<-function(input,output,session,values){
   
   restart<-function(values,refresh_grid=TRUE){
     print("restart started")
+    # Save leaderboard entry
+    CreateLeaderboardEntry(values$username,values$current_statistics$year,values$current_statistics$happiness,values$current_statistics$budget,values$current_statistics$population,values$current_statistics$homelessness,values$current_statistics$employment)
+    # clear historic data
+    ClearStatistics(values$username)
     # set default values and save
     showModal(dialogBox("please be reminded that budget is currently at 9999999999"))
     values$current_statistics<-data.frame(year=c(1),happiness=c(50),budget=c(999999),population=c(100),homelessness=c(0),employment=c(0))
@@ -263,10 +268,14 @@ gameCalc<-function(input,output,session,values){
   
   changeTab<- function(session){
     # insert function to change tab
-    updateTabsetPanel(session,inputId="tabs",selected="Game Play")
+    updateNavbarPage(session = session,
+                     inputId = "pages",
+                     selected = "second_page")
     print("changed tab to Game Play")
     gridUpdater()
+    
   }
+  
   
   progressBarUpdater<-function(){
     print("hi u were supposed to have a progress bar ;)")
