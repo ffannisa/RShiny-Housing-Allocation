@@ -39,9 +39,11 @@ loginModal <- function(failed = FALSE) {
 }
 
 leaderboardModal <- function(failed = FALSE) {
+  choice<-c("happiness", "budget", "employment", "homelessness", "population")
+  names(choice)<-c("Happiness", "Budget", "Employment", "Homelessness", "Population")
   modalDialog(
     title = "Leaderboard",
-    selectInput("leaderboard_table", "Choose leaderboard:", choices = c("Year", "Happiness", "Budget", "Employment", "Homelessness", "Population")),
+    selectInput("leaderboard_table", "Choose leaderboard:", choices = choice),
     tableOutput(outputId = "leaderboard_table"),
   )
 }
