@@ -260,7 +260,7 @@ gameCalc<-function(input,output,session,values){
   restart<-function(values,refresh_grid=TRUE){
     print("restart started")
     # clear historic data
-    ClearStatistics(values$username)
+    delete_historic_data(values$username)
     # set default values and save
     showModal(dialogBox("please be reminded that budget is currently at 9999999999"))
     values$current_statistics<-data.frame(year=c(1),happiness=c(50),budget=c(999999),population=c(100),homelessness=c(0),employment=c(0))
@@ -340,7 +340,7 @@ gameCalc<-function(input,output,session,values){
 
   goToGameOver <- function(winning, reason) {
     print("goToGameOver Started")
-    CreateLeaderboardEntry(values$username,values$current_statistics$year,values$current_statistics$happiness,values$current_statistics$budget,values$current_statistics$population,values$current_statistics$homelessness,values$current_statistics$employment)
+    CreateLeaderboardEntry(values$username)
     if (!winning) {
       output$gameOverReason <- renderText({
         paste0(reason)
