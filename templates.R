@@ -69,7 +69,7 @@ gameOverModal <- function(winning, reason = "") {
     },
     verbatimTextOutput("gameOverReason"),  # This will display the game over reason
     footer = tagList(
-      actionButton("back_button", "End Game", class="nes-btn is-error"),
+      actionButton("end_game", "End Game", class="nes-btn is-error"),
       actionButton("leaderboard", "Show Leaderboard", class="nes-btn is-warning")
     )
   )

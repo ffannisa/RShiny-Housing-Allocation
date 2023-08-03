@@ -151,15 +151,15 @@ uiGame <- fluidPage(
                         wellPanel(
                           verticalLayout(
                             fluidRow(
-                              br(),
-                              br(),
                               column(5, strong()),
                               br(),
                               column(7, tags$img(id="rubbishbin",src=image_rubbish,ondragover="allowDrop(event)",ondrop="ondropdemolish(event)",height="100px",width="100px"))
                             ),
                             hr(style = "border: 0.5px double #141f80;"),
                             fluidRow(
-                              column(5, strong('Year')), 
+                              column(5, strong('Year'), textOutput('yearValue')), 
+                              br(),
+                              br(),
                               br(),
                               column(12, sliderInput(inputId = "time", label = NULL, min = 0, max = 10, value = 5, step = 5)),
                               br(),
@@ -274,7 +274,7 @@ uiGame <- fluidPage(
                  column(6, style = 'border: 1px solid lightgrey; border-radius: 25px; background-color: #FFFFFF;',
                         br(),
                         # ntitle and info button
-                        div(HTML('<b>Homelesness Graph</b> '), style = 'display: inline-block;'),
+                        div(HTML('<b>Homelessness Graph</b> '), style = 'display: inline-block;'),
                         uiOutput('sales_map_button', style = 'display: inline-block;'),
                         br(), br(),
                         # map plot
@@ -349,6 +349,11 @@ function(input, output, session) {
     building_cost = 25,
     images = images
   )
+  
+  # Render Year Counter
+  output$yearValue <- renderText({
+    values$current_statistics$year
+  })
   
   # Render dynamic budget
   output$budgetValueGP <- renderText({
@@ -661,6 +666,10 @@ function(input, output, session) {
   source("gameCalc.R")
   gameCalc(input, output, session, values)
   
-  # Navigate back to the login page
-  updateTabsetPanel(session, "pages", selected = "first page")
+  # Navigate back to the login page and close the modal
+  observeEvent(input$end_game, {
+    removeModal(session)
+    updateNavbarPage(session, "pages", "first page")
+  })
+  
 }

@@ -21,7 +21,7 @@ body {
   min-width: 600px;
   margin: 0;
   background-color: #E1F5F4;
-  font-family: sans-serif;
+  font-family: 'Press Start 2P', sans-serif;
   color: rgba(0, 0, 0, 0.9);
 }
 
@@ -357,7 +357,7 @@ a:hover {
 }
 
 .custom-value-box5 .value-box-value {
-  font-size: 20px;
+  font-size: 10px;
   font-family: 'Press Start 2P', sans-serif;
   margin-bottom: 5px;
   color: rgba(0, 0, 0, 0.9);
@@ -388,6 +388,12 @@ a:hover {
   color: #fff;
   background: rgba(0, 0, 0, 0.15);
 }
+
+.remaining_lease_text {
+  font-size: 5px;
+  font-family: 'Press Start 2P', sans-serif;
+} 
+
 
 /* Game Over dialogue box */
 .modal-content {
