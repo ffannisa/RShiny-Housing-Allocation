@@ -37,9 +37,10 @@ uiLogin <- fluidPage(
       actionButton("register", label = "New Player", class = "nes-btn is-primary"),    
       # Returning Player button
       actionButton("login", label = "Returning Player", class = "nes-btn is-primary")),
+  div(# Action button to open modal dialog
+      actionButton("show_instructions", "Instructions",  class = "nes-btn is-error")),
   
   # Add some spacing
-  tags$br(),
   tags$br(),
   
   # Add the loggedInAs div and center its content at the bottom
@@ -340,6 +341,17 @@ function(input, output, session) {
   
   source("images.R")
   images <- c(rep(image_empty, 25))
+  
+  # Observer for instructions button
+  observeEvent(input$show_instructions, {
+    # Show modal dialog when button is clicked
+    showModal(modalDialog(
+      title = "Instructions",
+      # Display image in modal dialog
+      tags$img(src = "images/instructions.png"),
+      easyClose = TRUE
+    ))
+  })
   
   # define stored values !!! THIS DATA IS PLACEHOLDER FOR TESTING
   values <- reactiveValues(
