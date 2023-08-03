@@ -39,12 +39,15 @@ loginModal <- function(failed = FALSE) {
 }
 
 leaderboardModal <- function(failed = FALSE) {
-  choice<-c("happiness", "budget", "employment", "homelessness", "population")
-  names(choice)<-c("Happiness", "Budget", "Employment", "Homelessness", "Population")
+  choice <- c("happiness", "budget", "employment", "homelessness", "population")
+  names(choice) <- c("Happiness", "Budget", "Employment", "Homelessness", "Population")
+  
   modalDialog(
     title = "Leaderboard",
     selectInput("leaderboard_table", "Choose leaderboard:", choices = choice),
-    tableOutput(outputId = "leaderboard_table"),
+    
+    # Wrap your table output in a div that allows for scrolling
+    div(style = 'overflow-x: scroll', tableOutput(outputId = "leaderboard_table"))
   )
 }
 

@@ -352,7 +352,6 @@ FindGameHistory <- function(username) {
   
   # Prepare the query to select data from the historic_data table
   query_template <- "SELECT username, year, happiness, budget, population, homelessness, employment FROM historic_data WHERE username = ?id;"
-  s
   # Interpolate the username into the query
   query <- sqlInterpolate(conn, query_template, id = username)
   print(query)

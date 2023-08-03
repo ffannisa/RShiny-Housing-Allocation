@@ -677,7 +677,7 @@ function(input, output, session) {
   
   output$happy_trend_plot = renderPlot({
     # Get all the game statistics for the username
-    game_data <- FindGameStatistics(username)
+    game_data <- FindGameHistory(values$username)
     
     # Generate a line chart with 'year' on the x-axis and 'happiness' on the y-axis
     ggplot(game_data, aes(x = year, y = happiness)) + geom_line()
@@ -693,7 +693,7 @@ function(input, output, session) {
   # bar plot
   output$budg_bar_plot = renderPlot({
     # Get all the game statistics for the username
-    game_data <- FindGameStatistics(username)
+    game_data <- FindGameHistory(values$username)
     
     # Generate a bar chart with 'year' on the x-axis and 'budget' on the y-axis
     ggplot(game_data, aes(x = year, y = budget)) + geom_bar(stat = 'identity')
