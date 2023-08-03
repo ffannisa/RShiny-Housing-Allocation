@@ -149,7 +149,7 @@ fluidPage(
                               br(),
                               column(5, strong()),
                               br(),
-                              column(7, actionButton("demolish", label = "Demolish!", class = "nes-btn is-error"))
+                              column(7, tags$img(id="rubbishbin",src=image_rubbish,ondragover="allowDrop(event)",ondrop="ondropdemolish(event)",height="100px",width="100px"))
                             ),
                             hr(style = "border: 0.5px double #141f80;"),
                             fluidRow(
@@ -179,18 +179,33 @@ fluidPage(
                                      buildingCostModuleUI("building_cost")),
                               column(2, actionButton("build", label = "Build!", class = "nes-btn is-success")),
                               tags$script('
-              function dragStart(event) {event.dataTransfer.setData("Text", event.target.getAttribute("type"));}
+              function dragStart(event) {event.dataTransfer.setData("Text", ("type:"+event.target.getAttribute("type")));}
               
               function allowDrop(event) {event.preventDefault();}
               
               function drop(event) {
-                event.preventDefault();
-                var type = event.dataTransfer.getData("Text");
-                var image = event.target;
-                var gridnumber = image.getAttribute("location");
-                const result = String(gridnumber) + "," + type;
-                console.log(result);
-                Shiny.setInputValue("new_land_use", result);
+                var dataIn = event.dataTransfer.getData("Text").split(":");
+                console.log("dataIn",dataIn);
+                if (dataIn[0]=="type"){
+                  var image = event.target;
+                  var gridnumber = image.getAttribute("location");
+                  const result = String(gridnumber) + "," + dataIn[1];
+                  console.log(result);
+                  Shiny.setInputValue("new_land_use", result);
+                  Shiny.setInputValue("demolish_drop",null)
+                }
+              }
+              
+              function dragStartDemolish(event){
+                event.dataTransfer.setData("Text", ("location:"+event.target.getAttribute("location")));
+              }
+              function ondropdemolish(event){
+                var dataIn=event.dataTransfer.getData("Text").split(":");
+                console.log("dataIn",dataIn);
+                if (dataIn[0]=="location"){
+                  Shiny.setInputValue("demolish_drop",dataIn[1]);
+                  Shiny.setInputValue("new_land_use", null);
+                }
               }
               ')
                             )

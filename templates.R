@@ -45,4 +45,18 @@ dialogBox<- function(t="abababababa"){
   )
 }
 
+demolishConfirm<- function(gridnumber,type,demolish_cost,demolish_time){
+  
+  modalDialog(
+    title = paste0("Confrim Demolish ",type,"?"),
+    paste0("Demolition cost: ", demolish_cost),
+    tags$br(),
+    paste0("Time to demolish: ",demolish_time),
+    footer = tagList(
+      modalButton("Cancel"),
+      actionButton("demolishButton", "Confirm")
+    )
+  )
+}
+
 
