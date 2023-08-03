@@ -19,27 +19,52 @@ function(input, output, session) {
   )
   
   # Render dynamic budget
-  output$budgetValue <- renderText({
-    values$budget
+  output$budgetValueGP <- renderText({
+    values$current_statistics$budget
   })
   
   # Render dynamic employment
-  output$employmentValue <- renderText({
-    values$employment
+  output$employmentValueGP <- renderText({
+    values$current_statistics$employment
   })
   
   # Render dynamic homelessness
-  output$homelessnessValue <- renderText({
-    values$homelessness
+  output$homelessnessValueGP <- renderText({
+    values$current_statistics$homelessness
   })
   
   # Render dynamic population
-  output$populationValue <- renderText({
-    values$population
+  output$populationValueGP <- renderText({
+    values$current_statistics$population
   })
   
   # Render dynamic building cost value
-  output$buildingCostValue <- renderText({
+  output$buildingCostValueGP <- renderText({
+    values$building_cost
+  })
+  
+  # Render dynamic budget
+  output$budgetValueST <- renderText({
+    values$current_statistics$budget
+  })
+  
+  # Render dynamic employment
+  output$employmentValueST <- renderText({
+    values$current_statistics$employment
+  })
+  
+  # Render dynamic homelessness
+  output$homelessnessValueST <- renderText({
+    values$current_statistics$homelessness
+  })
+  
+  # Render dynamic population
+  output$populationValueST <- renderText({
+    values$current_statistics$population
+  })
+  
+  # Render dynamic building cost value
+  output$buildingCostValueST <- renderText({
     values$building_cost
   })
   

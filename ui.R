@@ -80,7 +80,7 @@ fluidPage(
                  # Value Box 1
                  column(width = 3, 
                         div(outputId = "box_1", class = "custom-value-box1",
-                            tags$div(class = "value-box-value", uiOutput("budgetValue")),
+                            tags$div(class = "value-box-value", uiOutput("budgetValueGP")),
                             tags$div(class = "value-box-title", "Budget")
                         )
                  ),
@@ -88,7 +88,7 @@ fluidPage(
                  # Value Box 2
                  column(width = 3,
                         div(outputId = "box_2", class = "custom-value-box2",
-                            tags$div(class = "value-box-value", uiOutput("employmentValue")),
+                            tags$div(class = "value-box-value", uiOutput("employmentValueGP")),
                             tags$div(class = "value-box-title", "Employed")
                         )
                  ),
@@ -96,7 +96,7 @@ fluidPage(
                  # Value Box 3
                  column(width = 3,
                         div(outputId = "box_3", class = "custom-value-box3",
-                            tags$div(class = "value-box-value", uiOutput("homelessnessValue")),
+                            tags$div(class = "value-box-value", uiOutput("homelessnessValueGP")),
                             tags$div(class = "value-box-title", "Homeless")
                         )
                  ),
@@ -104,7 +104,7 @@ fluidPage(
                  # Value Box 4
                  column(width = 3,
                         div(outputId = "box_4", class = "custom-value-box4",
-                            tags$div(class = "value-box-value", uiOutput("populationValue")),
+                            tags$div(class = "value-box-value", uiOutput("populationValueGP")),
                             tags$div(class = "value-box-title", "Population")
                         )
                  )
@@ -180,7 +180,7 @@ fluidPage(
                               ### Change to dynamic values
                               column(2, 
                                      div(outputId = "box_5", class = "custom-value-box5",
-                                         tags$div(class = "value-box-value", uiOutput("buildingCostValue")),
+                                         tags$div(class = "value-box-value", uiOutput("buildingCostValueGP")),
                                          tags$div(class = "value-box-title", "Building Cost"))),
                               column(2, actionButton("build", label = "Build!", class = "nes-btn is-success")),
                               tags$script('
@@ -215,7 +215,7 @@ fluidPage(
                  # Value Box 1
                  column(width = 3,
                         div(outputId = "box_1", class = "custom-value-box1",
-                            tags$div(class = "value-box-value", uiOutput("budgetValue")),
+                            tags$div(class = "value-box-value", uiOutput("budgetValueST")),
                             tags$div(class = "value-box-title", "Budget")
                         )
                  ),
@@ -223,7 +223,7 @@ fluidPage(
                  # Value Box 2
                  column(width = 3,
                         div(outputId = "box_2", class = "custom-value-box2",
-                            tags$div(class = "value-box-value", uiOutput("employmentValue")),
+                            tags$div(class = "value-box-value", uiOutput("employmentValueST")),
                             tags$div(class = "value-box-title", "Employed")
                         )
                  ),
@@ -231,7 +231,7 @@ fluidPage(
                  # Value Box 3
                  column(width = 3,
                         div(outputId = "box_3", class = "custom-value-box3",
-                            tags$div(class = "value-box-value", uiOutput("homelessnessValue")),
+                            tags$div(class = "value-box-value", uiOutput("homelessnessValueST")),
                             tags$div(class = "value-box-title", "Homeless")
                         )
                  ),
@@ -239,7 +239,7 @@ fluidPage(
                  # Value Box 4
                  column(width = 3,
                         div(outputId = "box_4", class = "custom-value-box4",
-                            tags$div(class = "value-box-value",  uiOutput("populationValue")),
+                            tags$div(class = "value-box-value",  uiOutput("populationValueST")),
                             tags$div(class = "value-box-title", "Population")
                         )
                  )
