@@ -366,6 +366,20 @@ FindGameHistory <- function(username) {
 }
 
 
+
+
+# Function to delete all data from the historic_data table
+delete_historic_data <- function() {
+  # Connect to the database using the getAWSConnection function
+  conn <- getAWSConnection()
+  
+  # Delete data from historic_data table
+  query <- "DELETE FROM historic_data"
+  dbExecute(conn, query)
+  
+  # Close the database connection
+  dbDisconnect(conn)
+}
       
 
 # Vivek's AWS
