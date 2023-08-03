@@ -324,17 +324,12 @@ RetrieveLeaderboard <- function(usernames, sort_by) {
     latest_stats <- findLatestStatistics(username)
     print(latest_stats)
     
-    # Check if the latest_stats data frame is not empty
     if (nrow(latest_stats) == 0) {
-      # If there is no data for the current username, skip to the next username
       cat(paste("No data found for username:", username, ". Skipping...\n"))
       next
     }
     
-    
-    # Iterate through the rows of the data frame and insert data into the leaderboard table
     for (i in 1:nrow(latest_stats)) {
-      
       query <- sprintf(query_template,
                        username = username,
                        happiness = latest_stats$happiness[i],
@@ -345,11 +340,6 @@ RetrieveLeaderboard <- function(usernames, sort_by) {
       )
       print(query)
       
-      # Sort the leaderboard by the selected column
-      sort_query <- sqlInterpolate(conn, "SELECT * FROM leaderboard ORDER BY ?id DESC;", id = sort_by)
-      print(sort_query)
-      sorted_leaderboard <- dbGetQuery(conn, sort_query)
-      
       # Execute the query to insert the data into the leaderboard table
       dbExecute(conn, query)
     }
@@ -357,14 +347,30 @@ RetrieveLeaderboard <- function(usernames, sort_by) {
     cat(paste("Data for username:", username, "has been saved in the leaderboard table.\n"))
   }
   
+  # Sort the leaderboard by the selected column after inserting all data
+  sort_query <- sqlInterpolate(conn, "SELECT * FROM leaderboard ORDER BY ?id DESC;", id = sort_by)
+  print(sort_query)
+  sorted_leaderboard <- dbGetQuery(conn, sort_query)
+  
   # Disconnect from the database
   dbDisconnect(conn)
   
-  # Return the success message
   message <- "All data has been saved successfully in the leaderboard table."
-  return(message)
+  return(sorted_leaderboard)
 }
-
+  
+# Function to delete all data from the historic_data table
+delete_historic_data <- function() {
+  # Connect to the database using the getAWSConnection function
+  conn <- getAWSConnection()
+  
+  # Delete data from historic_data table
+  query <- "DELETE FROM historic_data"
+  dbExecute(conn, query)
+  
+  # Close the database connection
+  dbDisconnect(conn)
+}
 
 
 # Vivek's AWS
