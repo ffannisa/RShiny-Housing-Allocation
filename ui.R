@@ -80,7 +80,7 @@ fluidPage(
                  # Value Box 1
                  column(width = 3, 
                         div(outputId = "box_1", class = "custom-value-box1",
-                            tags$div(class = "value-box-value", "5"),
+                            tags$div(class = "value-box-value", uiOutput("budgetValue")),
                             tags$div(class = "value-box-title", "Budget")
                         )
                  ),
@@ -88,15 +88,15 @@ fluidPage(
                  # Value Box 2
                  column(width = 3,
                         div(outputId = "box_2", class = "custom-value-box2",
-                            tags$div(class = "value-box-value", "10"),
-                            tags$div(class = "value-box-title", "Unemployed")
+                            tags$div(class = "value-box-value", uiOutput("employmentValue")),
+                            tags$div(class = "value-box-title", "Employed")
                         )
                  ),
                  
                  # Value Box 3
                  column(width = 3,
                         div(outputId = "box_3", class = "custom-value-box3",
-                            tags$div(class = "value-box-value", "15"),
+                            tags$div(class = "value-box-value", uiOutput("homelessnessValue")),
                             tags$div(class = "value-box-title", "Homeless")
                         )
                  ),
@@ -104,7 +104,7 @@ fluidPage(
                  # Value Box 4
                  column(width = 3,
                         div(outputId = "box_4", class = "custom-value-box4",
-                            tags$div(class = "value-box-value", "20"),
+                            tags$div(class = "value-box-value", uiOutput("populationValue")),
                             tags$div(class = "value-box-title", "Population")
                         )
                  )
@@ -215,7 +215,7 @@ fluidPage(
                  # Value Box 1
                  column(width = 3,
                         div(outputId = "box_1", class = "custom-value-box1",
-                            tags$div(class = "value-box-value", "5"),
+                            tags$div(class = "value-box-value", uiOutput("budgetValue")),
                             tags$div(class = "value-box-title", "Budget")
                         )
                  ),
@@ -223,15 +223,15 @@ fluidPage(
                  # Value Box 2
                  column(width = 3,
                         div(outputId = "box_2", class = "custom-value-box2",
-                            tags$div(class = "value-box-value", "10"),
-                            tags$div(class = "value-box-title", "Unemployed")
+                            tags$div(class = "value-box-value", uiOutput("employmentValue")),
+                            tags$div(class = "value-box-title", "Employed")
                         )
                  ),
                  
                  # Value Box 3
                  column(width = 3,
                         div(outputId = "box_3", class = "custom-value-box3",
-                            tags$div(class = "value-box-value", "15"),
+                            tags$div(class = "value-box-value", uiOutput("homelessnessValue")),
                             tags$div(class = "value-box-title", "Homeless")
                         )
                  ),
@@ -239,7 +239,7 @@ fluidPage(
                  # Value Box 4
                  column(width = 3,
                         div(outputId = "box_4", class = "custom-value-box4",
-                            tags$div(class = "value-box-value", "20"),
+                            tags$div(class = "value-box-value",  uiOutput("populationValue")),
                             tags$div(class = "value-box-title", "Population")
                         )
                  )
@@ -267,7 +267,7 @@ fluidPage(
                         fluidRow(style = 'border: 1px solid lightgrey; border-radius: 25px; margin-left: 10px; padding-left: 10px; background-color: #FFFFFF;',
                                  br(),
                                  # sales trend title and info button
-                                 div(HTML('<b>Unemployment Graph</b> '), style = 'display: inline-block;'),
+                                 div(HTML('<b>Employment Graph</b> '), style = 'display: inline-block;'),
                                  uiOutput('sales_trend_button', style = 'display: inline-block;'),
                                  br(), br(),
                                  # trend plot

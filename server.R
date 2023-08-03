@@ -1,7 +1,7 @@
 library(shiny)
 source("databaseFunctions.R")
 source("templates.R")
-source("building_cost_module.R")
+#source("building_cost_module.R")
 
 # Define server logic required to draw a histogram
 function(input, output, session) {
@@ -14,9 +14,29 @@ function(input, output, session) {
     username = NULL,
     current_statistics = data.frame(year = c(1), happiness = c(1), budget = c(1000), population = c(10), homelessness = c(0), employment = c(0)),
     land_use = data.frame(grid_number = c(1:25), type = rep("empty", 25), remaining_lease = rep(-1, 25)),
-    building_cost = 0,
+    building_cost = 25,
     images = images
   )
+  
+  # Render dynamic budget
+  output$budgetValue <- renderText({
+    values$budget
+  })
+  
+  # Render dynamic employment
+  output$employmentValue <- renderText({
+    values$employment
+  })
+  
+  # Render dynamic homelessness
+  output$homelessnessValue <- renderText({
+    values$homelessness
+  })
+  
+  # Render dynamic population
+  output$populationValue <- renderText({
+    values$population
+  })
   
   # Render dynamic building cost value
   output$buildingCostValue <- renderText({
