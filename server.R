@@ -304,7 +304,9 @@ uiGame <- fluidPage(
                                  br(), br(),
                                  # bar plot
                                  plotOutput('bar_plot', height = '175px')
-                        )
+                        ),
+                        br(),
+                        br()
                  )
                )
                
@@ -342,7 +344,7 @@ function(input, output, session) {
   # define stored values !!! THIS DATA IS PLACEHOLDER FOR TESTING
   values <- reactiveValues(
     username = NULL,
-    current_statistics = data.frame(year = c(1), happiness = c(1), budget = c(1000), population = c(10), homelessness = c(0), employment = c(0)),
+    current_statistics = data.frame(year = c(1), happiness = c(1), budget = c(10000), population = c(10), homelessness = c(0), employment = c(0)),
     land_use = data.frame(grid_number = c(1:25), type = rep("empty", 25), remaining_lease = rep(-1, 25)),
     building_cost = 25,
     images = images,
@@ -662,4 +664,7 @@ function(input, output, session) {
   # Game calculation functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   source("gameCalc.R")
   gameCalc(input, output, session, values)
+  
+  # Navigate back to the login page
+  updateTabsetPanel(session, "pages", selected = "first page")
 }
