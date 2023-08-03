@@ -38,6 +38,17 @@ loginModal <- function(failed = FALSE) {
   )
 }
 
+leaderboardModal <- function(failed = FALSE) {
+  choice<-c("happiness", "budget", "employment", "homelessness", "population")
+  names(choice)<-c("Happiness", "Budget", "Employment", "Homelessness", "Population")
+  modalDialog(
+    title = "Leaderboard",
+    selectInput("leaderboard_table", "Choose leaderboard:", choices = choice),
+    tableOutput(outputId = "leaderboard_table"),
+  )
+}
+
+
 dialogBox<- function(t="abababababa"){
   modalDialog(
     t,
@@ -69,9 +80,11 @@ gameOverModal <- function(winning, reason = "") {
     },
     verbatimTextOutput("gameOverReason"),  # This will display the game over reason
     footer = tagList(
-      actionButton("back_button", "End Game", class="nes-btn is-error"),
+      actionButton("end_game", "End Game", class="nes-btn is-error"),
       actionButton("leaderboard", "Show Leaderboard", class="nes-btn is-warning")
     )
   )
 }
+
+
 

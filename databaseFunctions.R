@@ -272,53 +272,102 @@ removeStructure <- function(username, grid_number) {
   return(message)
 }
 
-# NEEDS SOME WORK HAHA
-RetrieveLeaderboard <- function(username) {
-  # Get the latest statistics for the given username
-  latest_stats <- findLatestStatistics(username)
-  
-  # Check if the latest_stats data frame is not empty
-  if (nrow(latest_stats) == 0) {
-    stop("No data found for the given username.")
-  }
-  
+
+
+CreateLeaderboardEntry <- function(username) {
   # Connect to the database using the getAWSConnection function
   conn <- getAWSConnection()
   
-  # Prepare the query to insert data into the leaderboard table
+  # Prepare the query template to insert data into the leaderboard table
   query_template <- "INSERT INTO leaderboard (username, happiness, budget, population, homelessness, employment) VALUES ('%s', %d, %d, %d, %d, %d)"
   
-  # Iterate through the rows of the data frame and insert data into the leaderboard table
-  for (i in 1:nrow(latest_stats)) {
-    query <- sprintf(query_template,
-                     latest_stats$username[i],
-                     latest_stats$happiness[i],
-                     latest_stats$budget[i],
-                     latest_stats$population[i],
-                     latest_stats$homelessness[i],
-                     latest_stats$employment[i])
+
+  # Get the latest statistics for the current username
+  latest_stats <- findLatestStatistics(username)
+  print(latest_stats)
     
-    # Execute the query to insert the data into the leaderboard table
-    dbExecute(conn, query)
+  # Check if the latest_stats data frame is not empty
+  if (nrow(latest_stats) == 0) {
+    # If there is no data for the current username, skip to the next username
+    cat(paste("No data found for username:", username, ". Skipping...\n"))
+    stop("This username has no data.")
   }
+    
+    
+    
+  query <- sprintf(query_template,
+                   username = username,
+                   happiness = latest_stats$happiness,
+                   budget = latest_stats$budget,
+                   population = latest_stats$population,
+                   homelessness = latest_stats$homelessness,
+                   employment = latest_stats$employment
+  )
+  print(query)
+      
+  # Execute the query to insert the data into the leaderboard table
+  dbExecute(conn, query)
   
+  cat(paste("Data for username:", username, "has been saved in the leaderboard table.\n"))
+
+
   # Disconnect from the database
   dbDisconnect(conn)
-  
+
   # Return the success message
-  message <- "Data has been saved successfully in the leaderboard table."
+  message <- "All data has been saved successfully in the leaderboard table."
   return(message)
 }
 
-CreateLeaderboardEntry<-function(username, year, happiness, budget, population, homelessness, employment){
-  # enter end of game score into leaderboard
-  return()
-}
-ClearStatistics<-function(username){
-  # Wipe out historic data for that username
-  return()
+sort_leaderboard <- function(sort_by) {
+  conn <- getAWSConnection()
+  
+  # Define the sorting order for each metric
+  sort_order <- ifelse(sort_by == "homelessness", "ASC", "DESC")
+  print(sort_order)
+  
+  # Construct the query to sort the leaderboard by the specified metric
+  
+  # "DELETE FROM current_land_use WHERE username = ?id1 AND grid_number = ?id2;", id1 = username, id2 = grid_number)
+  sort_query <- sqlInterpolate(conn, 
+                          "SELECT username, happiness, budget, population, homelessness, employment
+                           FROM leaderboard
+                           ORDER BY ?sort_by ?sort_order", sort_by= SQL(sort_by), sort_order=SQL(sort_order))
+  print(sort_query)
+  
+  # Execute the query and get the sorted leaderboard
+  sorted_leaderboard <- dbGetQuery(conn, sort_query)
+  print(sorted_leaderboard)
+  
+  dbDisconnect(conn)
+  
+  return(sorted_leaderboard)
 }
 
+
+
+FindGameHistory <- function(username) {
+  # Connect to the database using the getAWSConnection function
+  conn <- getAWSConnection()
+  
+  # Prepare the query to select data from the historic_data table
+  query_template <- "SELECT username, year, happiness, budget, population, homelessness, employment FROM historic_data WHERE username = ?id;"
+  s
+  # Interpolate the username into the query
+  query <- sqlInterpolate(conn, query_template, id = username)
+  print(query)
+  # Get the game history data for the given username
+  game_history <- dbGetQuery(conn, query)
+  print(game_history)
+  # Disconnect from the database
+  dbDisconnect(conn)
+  
+  # Return the game history data
+  return(game_history)
+}
+
+
+      
 
 # Vivek's AWS
 # dbname = "student034",
