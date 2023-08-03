@@ -4,6 +4,7 @@
 buildingCostModuleUI <- function(id) {
   ns <- NS(id)
   tagList(
+    ### use uiOutput
     column(2, 
            div(id = ns("building_cost_box"), class = "custom-value-box5",
                tags$div(class = "value-box-value", uiOutput(ns("building_cost_value_output"))),

@@ -18,35 +18,9 @@ function(input, output, session) {
     images = images
   )
   
-  # Define the building_cost_value function
-  building_cost_value <- function() {
-    return(values$building_cost)
-  }
-  
-  # Define the buildingCostModuleUI function
-  buildingCostModuleUI <- function(id) {
-    ns <- NS(id)
-    tagList(
-      column(2,
-             div(id = ns("building_cost_box"), class = "custom-value-box5",
-                 uiOutput(ns("building_cost_value_output")),
-                 tags$div(class = "value-box-title", "Building Cost")
-             )
-      )
-    )
-  }
-  
-  # Call the buildingCostModuleUI
-  output$building_cost_module <- renderUI({
-    buildingCostModuleUI("building_cost")
-  })
-  
-  # Call the buildingCostModule server function
-  callModule(buildingCostModule, "building_cost", values)
-  
-  # Update the value box with the building cost using renderUI and uiOutput
-  output$building_cost_value_output <- renderUI({
-    building_cost_value()
+  # Render dynamic building cost value
+  output$buildingCostValue <- renderText({
+    values$building_cost
   })
   
   # UI functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

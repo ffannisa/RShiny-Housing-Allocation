@@ -5,7 +5,7 @@ library(shinyWidgets)
 library(shinyjs)
 
 source("images.R")
-source("building_cost_module.R")
+#source("building_cost_module.R")
 
 fluidPage(
   # Add font and Game design template to use -> Nes.css
@@ -160,9 +160,9 @@ fluidPage(
                               column(7, actionButton("progress", label = "Progress!", class = "nes-btn is-warning"))
                             )
                           )
-                        ),
+                        )
                         # Include the building cost elements here
-                        uiOutput("building_cost_ui")
+                        #uiOutput("building_cost_ui")
                  )
                ),
                br(),
@@ -177,9 +177,11 @@ fluidPage(
                               column(2, tags$img(id="img2",type="hdb_2",draggable="true",ondragstart="dragStart(event)",src=image_hdb2, alt="House 2", width=100, height=100, strong('HDB 2'))),
                               column(2, tags$img(id="img3",type="office",draggable="true",ondragstart="dragStart(event)",src=image_office, alt="Office", width=100, height=100, strong('Office'))),
                               column(2, tags$img(id="img4",type="park",draggable="true",ondragstart="dragStart(event)",src=image_park, alt="Park", width=100, height=100, strong('Park'))),
-                              column(2, width=8.7, height=12,
-                                     # Include the buildingCostModuleUI here
-                                     buildingCostModuleUI("building_cost")),
+                              ### Change to dynamic values
+                              column(2, 
+                                     div(outputId = "box_5", class = "custom-value-box5",
+                                         tags$div(class = "value-box-value", uiOutput("buildingCostValue")),
+                                         tags$div(class = "value-box-title", "Building Cost"))),
                               column(2, actionButton("build", label = "Build!", class = "nes-btn is-success")),
                               tags$script('
               function dragStart(event) {event.dataTransfer.setData("Text", event.target.getAttribute("type"));}
