@@ -272,8 +272,46 @@ removeStructure <- function(username, grid_number) {
   return(message)
 }
 
-# NEEDS SOME WORK HAHA
-RetrieveLeaderboard <- function(usernames) {
+
+# RetrieveLeaderboard <- function(username) {
+#   # Get the latest statistics for the given username
+#   latest_stats <- findLatestStatistics(username)
+#   
+#   # Check if the latest_stats data frame is not empty
+#   if (nrow(latest_stats) == 0) {
+#     stop("No data found for the given username.")
+#   }
+#   
+#   # Connect to the database using the getAWSConnection function
+#   conn <- getAWSConnection()
+#   
+#   # Prepare the query to insert data into the leaderboard table
+#   query_template <- "INSERT INTO leaderboard (username, happiness, budget, population, homelessness, employment) VALUES ('%s', %d, %d, %d, %d, %d)"
+#   
+#   # Iterate through the rows of the data frame and insert data into the leaderboard table
+#   for (i in 1:nrow(latest_stats)) {
+#     query <- sprintf(query_template,
+#                      latest_stats$username[i],
+#                      latest_stats$happiness[i],
+#                      latest_stats$budget[i],
+#                      latest_stats$population[i],
+#                      latest_stats$homelessness[i],
+#                      latest_stats$employment[i])
+#     
+#     # Execute the query to insert the data into the leaderboard table
+#     dbExecute(conn, query)
+#   }
+#   
+#   # Disconnect from the database
+#   dbDisconnect(conn)
+#   
+#   # Return the success message
+#   message <- "Data has been saved successfully in the leaderboard table."
+#   return(message)
+# }
+
+
+RetrieveLeaderboard <- function(usernames, sort_by) {
   # Connect to the database using the getAWSConnection function
   conn <- getAWSConnection()
   
@@ -296,7 +334,7 @@ RetrieveLeaderboard <- function(usernames) {
     
     # Iterate through the rows of the data frame and insert data into the leaderboard table
     for (i in 1:nrow(latest_stats)) {
-    
+      
       query <- sprintf(query_template,
                        username = username,
                        happiness = latest_stats$happiness[i],
@@ -304,8 +342,12 @@ RetrieveLeaderboard <- function(usernames) {
                        population = latest_stats$population[i],
                        homelessness = latest_stats$homelessness[i],
                        employment = latest_stats$employment[i]
-                       )
+      )
       print(query)
+      
+      # Sort the leaderboard by the selected column
+      sort_query <- sqlInterpolate(conn, "SELECT * FROM leaderboard ORDER BY ?id;", id = sort_by)
+      sorted_leaderboard <- dbGetQuery(conn, sort_by)
       
       # Execute the query to insert the data into the leaderboard table
       dbExecute(conn, query)
