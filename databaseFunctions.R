@@ -345,6 +345,28 @@ sort_leaderboard <- function(sort_by) {
 }
 
 
+
+FindGameHistory <- function(username) {
+  # Connect to the database using the getAWSConnection function
+  conn <- getAWSConnection()
+  
+  # Prepare the query to select data from the historic_data table
+  query_template <- "SELECT username, year, happiness, budget, population, homelessness, employment FROM historic_data WHERE username = ?id;"
+  s
+  # Interpolate the username into the query
+  query <- sqlInterpolate(conn, query_template, id = username)
+  print(query)
+  # Get the game history data for the given username
+  game_history <- dbGetQuery(conn, query)
+  print(game_history)
+  # Disconnect from the database
+  dbDisconnect(conn)
+  
+  # Return the game history data
+  return(game_history)
+}
+
+
       
 
 # Vivek's AWS
