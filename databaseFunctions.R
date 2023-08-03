@@ -346,8 +346,9 @@ RetrieveLeaderboard <- function(usernames, sort_by) {
       print(query)
       
       # Sort the leaderboard by the selected column
-      sort_query <- sqlInterpolate(conn, "SELECT * FROM leaderboard ORDER BY ?id;", id = sort_by)
-      sorted_leaderboard <- dbGetQuery(conn, sort_by)
+      sort_query <- sqlInterpolate(conn, "SELECT * FROM leaderboard ORDER BY ?id DESC;", id = sort_by)
+      print(sort_query)
+      sorted_leaderboard <- dbGetQuery(conn, sort_query)
       
       # Execute the query to insert the data into the leaderboard table
       dbExecute(conn, query)
