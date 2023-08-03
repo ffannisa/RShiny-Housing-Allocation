@@ -1,54 +1,57 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
-
-
-
 library(shiny)
+library(shinydashboard)
+library(tidyverse)
+library(shinyWidgets)
+library(shinyjs)
 
-# Define UI for application that draws a histogram
+pageButtonUi <- function(id) {
+  actionButton(NS(id, "page_change"), label = "Start Game!", class = "nes-btn is-success bottomButton1")
+}
+
 fluidPage(
-  # Add font and Game design template to use -> Nes.css
-  # Link the external CSS file and fonts
+  useShinyjs(),
   tags$head(
-    tags$link(href = "https://unpkg.com/nes.css@2.3.0/css/nes.min.css", rel = "stylesheet"),
-    tags$link(href = "https://fonts.googleapis.com/css?family=Press+Start+2P", rel = "stylesheet")
+    tags$style(
+      HTML("
+           .navbar { display: none; }
+           body { padding-top: 0px; }
+           .bottomButton1 {
+             position: absolute;
+             bottom: 20px;
+             width: 100%;
+           .bottomButton2 {
+             position: absolute;
+             bottom: 40px;
+             width: 100%;
+             font-family: 'Press Start 2P';
+           }
+      ")
+    )
   ),
-  
-  # Link the external CSS file
-  includeCSS("css/Login_style.css"),
-  
-  # Center the game title "Housing Hustlers" with spacing
-  tags$div(
-    style = "text-align: center; margin-top: 50px;",
-    tags$h1("Housing Hustlers")
-  ),
-  
-  # Add buttons for Register and Login
-  div(class = "btn-align",
-      actionButton("register", label = "New Player", class = "nes-btn is-primary"),    
-      # Returning Player button
-      actionButton("login", label = "Returning Player", class = "nes-btn is-primary")),
-  
-  # Add some spacing
-  tags$br(),
-  tags$br(),
-  
-  # Add the loggedInAs div and center its content at the bottom
-  div(id = "loggedInAsWrapper",
-      style = "text-align: center;",
-      htmlOutput("loggedInAs")
-  ),
-  
-  # Apply CSS to center the entire page
-  style = "display: flex; flex-direction: column; justify-content: space-between; align-items: center; height: 100vh;"
-    
-    
+  navbarPage(
+    title = "test",
+    id = "pages",
+    tabPanel(title = "first page",
+             div(style="position:relative; height:100%;",
+                 fluidRow(
+                   column(width = 12, uiOutput("dynamic_ui")), # Here is the uiOutput
+                   column(width = 12,
+                          pageButtonUi("page")
+                   )
+                 )
+             )
+    ),
+    tabPanel(title = "second_page",
+             div(style="position:relative; height:100%;",
+                 fluidRow(
+                   column(width = 12, uiOutput("game_ui")), # uiOutput for game page
+                   column(width = 12,
+                          actionButton("restart", "Restart!", class = "nes-btn is-warning bottomButton2", style= "width: 30%; font-family: 'Press Start 2P';"),
+                          br(),
+                          actionButton("back_button", "Back to Login!", class = "nes-btn is-error bottomButton2", style= "width: 100%; font-family: 'Press Start 2P';")
+                   )
+                 )
+             )
+    )
+  )
 )
-

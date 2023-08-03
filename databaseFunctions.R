@@ -130,8 +130,11 @@ login <- function(username, password) {
 
 
 # Save data onto AWS database
-conn <- getAWSConnection()
-saveGameStatistics <- function(conn, username, year, happiness, budget, population, homelessness, employment) {
+# conn <- getAWSConnection()
+
+# Moved the getAWSConnection into the function
+saveGameStatistics <- function(username, year, happiness, budget, population, homelessness, employment) {
+  conn <- getAWSConnection()
   # Prepare the query to insert the data into the historic_data table
   query <- sprintf("INSERT INTO historic_data (username, year, happiness, budget, population, homelessness, employment) VALUES ('%s', %d, %d, %d, %d, %d, %d)",
                    username, year, happiness, budget, population, homelessness, employment)
@@ -141,11 +144,12 @@ saveGameStatistics <- function(conn, username, year, happiness, budget, populati
   
   # Return the success message
   message <- "Data has been saved successfully"
+  dbDisconnect(conn)
   return(message)
 }
-
-saveGameStatistics(conn, "username1", 2023, 85, 1000, 5000, 10, 90)
-saveGameStatistics(conn, "a", 2023, 85, 1000, 5000, 10, 90)
+# 
+# saveGameStatistics(conn, "username1", 2023, 85, 1000, 5000, 10, 90)
+# saveGameStatistics(conn, "a", 2023, 85, 1000, 5000, 10, 90)
 
 # TESTED
 findLatestStatistics <- function(username) {
@@ -196,17 +200,20 @@ findLandUse <- function(username) {
 
 
 # conn <- getAWSConnection()
-SaveCurrentLanduse <- function(conn,data) {
+# Moved the getAWSConnection into the function
+SaveCurrentLanduse <- function(data) {
+  conn <- getAWSConnection()
   if (is.null(data) || nrow(data) == 0) {
     message <- "Data is empty. No records to save."
     return(message)
   }
-  
+  print("start delete")
   # First, delete any existing records for the given username
   username <- unique(data$username)
   query_delete <- sqlInterpolate(conn, "DELETE FROM current_land_use WHERE username = ?id1;", id1 = username)
   dbExecute(conn, query_delete)
   
+  print("start insert")
   # Then, insert the new records into the current_land_use table
   query_insert <- "INSERT INTO current_land_use (username, grid_number, type, remaining_lease) VALUES "
   for (i in 1:nrow(data)) {
@@ -220,6 +227,7 @@ SaveCurrentLanduse <- function(conn,data) {
   
   # Return the success message
   message <- "Data has been saved successfully"
+  dbDisconnect(conn)
   return(message)
 }
 
