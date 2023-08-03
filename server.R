@@ -151,15 +151,15 @@ uiGame <- fluidPage(
                         wellPanel(
                           verticalLayout(
                             fluidRow(
-                              br(),
-                              br(),
                               column(5, strong()),
                               br(),
                               column(7, tags$img(id="rubbishbin",src=image_rubbish,ondragover="allowDrop(event)",ondrop="ondropdemolish(event)",height="100px",width="100px"))
                             ),
                             hr(style = "border: 0.5px double #141f80;"),
                             fluidRow(
-                              column(5, strong('Year')), 
+                              column(5, strong('Year'), textOutput('yearValue')), 
+                              br(),
+                              br(),
                               br(),
                               column(12, sliderInput(inputId = "time", label = NULL, min = 0, max = 10, value = 5, step = 5)),
                               br(),
@@ -270,11 +270,11 @@ uiGame <- fluidPage(
                
                # 2nd fluid row for map and plots
                fluidRow(
-                 # 1st column for map
+                 # 1st column for map: Population
                  column(6, style = 'border: 1px solid lightgrey; border-radius: 25px; background-color: #FFFFFF;',
                         br(),
-                        # ntitle and info button
-                        div(HTML('<b>Homelesness Graph</b> '), style = 'display: inline-block;'),
+                        # title and info button
+                        div(HTML('<b>Population Graph</b> '), style = 'display: inline-block;'),
                         uiOutput('sales_map_button', style = 'display: inline-block;'),
                         br(), br(),
                         # map plot
@@ -284,27 +284,29 @@ uiGame <- fluidPage(
                  
                  # 2nd column for plots
                  column(6, 
-                        # fluidRow for sales trend
+                        # fluidRow for Happiness Index  ##DONE
                         fluidRow(style = 'border: 1px solid lightgrey; border-radius: 25px; margin-left: 10px; padding-left: 10px; background-color: #FFFFFF;',
                                  br(),
-                                 # sales trend title and info button
-                                 div(HTML('<b>Employment Graph</b> '), style = 'display: inline-block;'),
-                                 uiOutput('sales_trend_button', style = 'display: inline-block;'),
+                                 # trend title and info button
+                                 div(HTML('<b>Happiness index</b> '), style = 'display: inline-block;'),
+                                 uiOutput('happy_trend_button', style = 'display: inline-block;'),
                                  br(), br(),
                                  # trend plot
-                                 plotOutput('trend_plot', height = '175px')
+                                 plotOutput('happy_trend_plot', height = '175px')
                         ),
                         br(),
                         # fluidRow for bar plot
                         fluidRow(style = 'border: 1px solid lightgrey; border-radius: 25px; margin-left: 10px; padding-left: 10px; background-color: #FFFFFF;',
                                  br(),
                                  # bar plot title and info button
-                                 div(HTML('<b>Happiness Index</b> '), style = 'display: inline-block;'),
-                                 uiOutput('bar_plot_button', style = 'display: inline-block;'),
+                                 div(HTML('<b>Budget Bar Plot</b> '), style = 'display: inline-block;'),
+                                 uiOutput('budg_plot_button', style = 'display: inline-block;'),
                                  br(), br(),
                                  # bar plot
-                                 plotOutput('bar_plot', height = '175px')
-                        )
+                                 plotOutput('budg_bar_plot', height = '175px')
+                        ),
+                        br(),
+                        br()
                  )
                )
                
@@ -342,11 +344,16 @@ function(input, output, session) {
   # define stored values !!! THIS DATA IS PLACEHOLDER FOR TESTING
   values <- reactiveValues(
     username = NULL,
-    current_statistics = data.frame(year = c(1), happiness = c(1), budget = c(1000), population = c(10), homelessness = c(0), employment = c(0)),
+    current_statistics = data.frame(year = c(1), happiness = c(1), budget = c(10000), population = c(10), homelessness = c(0), employment = c(0)),
     land_use = data.frame(grid_number = c(1:25), type = rep("empty", 25), remaining_lease = rep(-1, 25)),
     building_cost = 25,
     images = images
   )
+  
+  # Render Year Counter
+  output$yearValue <- renderText({
+    values$current_statistics$year
+  })
   
   # Render dynamic budget
   output$budgetValueGP <- renderText({
@@ -634,36 +641,54 @@ function(input, output, session) {
   # sales map button
   # Hillman move graphs to gameCalc
   
+  # sales map button
   output$sales_map_button <- renderUI({
     actionButton('salesMapButton', NULL, icon = icon('info'), style = 'border-radius: 50%;')
   })
   
-  # sales map
+  # 1st graph
   output$sales_map = renderPlot({
     ggplot(mtcars, aes(x = disp, y = mpg)) + geom_point()
   })
   
-  # sales trend button
-  output$sales_trend_button <- renderUI({
-    actionButton('salesTrendButton', NULL, icon = icon('info'), style = 'border-radius: 50%;')
+  ##### HAPPINESS GRAPH
+  output$happy_trend_button <- renderUI({
+    actionButton('happyTrendButton', NULL, icon = icon('info'), style = 'border-radius: 50%;')
   })
   
-  # sales trend plot
-  output$trend_plot = renderPlot({
-    ggplot(mtcars, aes(x = disp, y = mpg, group = 'cyl')) + geom_line()
+  output$happy_trend_plot = renderPlot({
+    # Get all the game statistics for the username
+    game_data <- FindGameStatistics(username)
+    
+    # Generate a line chart with 'year' on the x-axis and 'happiness' on the y-axis
+    ggplot(game_data, aes(x = year, y = happiness)) + geom_line()
   })
+  #####
   
+  ##### Budget Bar Plot
   # bar plot button
-  output$bar_plot_button <- renderUI({
-    actionButton('barPlotButton', NULL, icon = icon('info'), style = 'border-radius: 50%;')
+  output$budg_plot_button <- renderUI({
+    actionButton('budgPlotButton', NULL, icon = icon('info'), style = 'border-radius: 50%;')
   })
   
   # bar plot
-  output$bar_plot = renderPlot({
-    ggplot(count(mtcars, cyl), aes(x = cyl, y = n)) + geom_bar(stat = 'identity')
+  output$budg_bar_plot = renderPlot({
+    # Get all the game statistics for the username
+    game_data <- FindGameStatistics(username)
+    
+    # Generate a bar chart with 'year' on the x-axis and 'budget' on the y-axis
+    ggplot(game_data, aes(x = year, y = budget)) + geom_bar(stat = 'identity')
   })
+  ######
   
   # Game calculation functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   source("gameCalc.R")
   gameCalc(input, output, session, values)
+  
+  # Navigate back to the login page and close the modal
+  observeEvent(input$end_game, {
+    removeModal(session)
+    updateNavbarPage(session, "pages", "first page")
+  })
+  
 }

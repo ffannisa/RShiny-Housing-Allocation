@@ -48,6 +48,7 @@ fluidPage(
                    column(width = 12,
                           actionButton("restart", "Restart!", class = "nes-btn is-warning bottomButton2", style= "width: 30%; font-family: 'Press Start 2P';"),
                           br(),
+                          br(),
                           actionButton("back_button", "Back to Login!", class = "nes-btn is-error bottomButton2", style= "width: 100%; font-family: 'Press Start 2P';")
                    )
                  )

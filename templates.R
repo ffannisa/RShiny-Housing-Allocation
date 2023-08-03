@@ -68,6 +68,21 @@ demolishConfirm<- function(gridnumber,type,demolish_cost,demolish_time){
   )
 }
 
+gameOverModal <- function(winning, reason = "") {
+  modalDialog(
+    title = "Game Over",
+    if (winning) {
+      "Congratulations, you've won the game!"
+    } else {
+      "Sorry, you've lost the game!"
+    },
+    verbatimTextOutput("gameOverReason"),  # This will display the game over reason
+    footer = tagList(
+      actionButton("end_game", "End Game", class="nes-btn is-error"),
+      actionButton("leaderboard", "Show Leaderboard", class="nes-btn is-warning")
+    )
+  )
+}
 
 
 

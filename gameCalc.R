@@ -171,10 +171,10 @@ gameCalc<-function(input,output,session,values){
                          values$current_statistics$employment)
       print(values$current_statistics$happiness<=0 | values$current_statistics$budget<=0)
       if (values$current_statistics$happiness<=0 | values$current_statistics$budget<=0){
-        goToGameOver(FALSE)
+        goToGameOver(FALSE, "Happiness or budget fell to 0.")
         return()
       }else if(values$current_statistics$year==999){
-        goToGameOver(TRUE)
+        goToGameOver(TRUE, "You have reached the year 999.")
         return()
       }
     }
@@ -317,17 +317,21 @@ gameCalc<-function(input,output,session,values){
     
   }
   
-  goToGameOver<- function(winning){
+
+  goToGameOver <- function(winning, reason) {
     print("goToGameOver Started")
-    if (!winning){
-      showModal(dialogBox("U lost. Also need a game over"))
-    }else{
-      showModal(dialogBox("U win. Also need a game over"))
+    if (!winning) {
+      output$gameOverReason <- renderText({
+        paste0(reason)
+      })
+      showModal(gameOverModal(FALSE))
+    } else {
+      output$gameOverReason <- renderText({
+        paste0(reason)
+      })
+      showModal(gameOverModal(TRUE))
     }
-  }
-  
-  
-  
+  } 
   
   
 }
