@@ -241,13 +241,12 @@ gameCalc<-function(input,output,session,values){
   
   # USE CASE 11 RESTART GAME
   observeEvent(input$restart,{
+    CreateLeaderboardEntry(values$username,values$current_statistics$year,values$current_statistics$happiness,values$current_statistics$budget,values$current_statistics$population,values$current_statistics$homelessness,values$current_statistics$employment)
     restart(values)
   })
   
   restart<-function(values,refresh_grid=TRUE){
     print("restart started")
-    # Save leaderboard entry
-    CreateLeaderboardEntry(values$username,values$current_statistics$year,values$current_statistics$happiness,values$current_statistics$budget,values$current_statistics$population,values$current_statistics$homelessness,values$current_statistics$employment)
     # clear historic data
     ClearStatistics(values$username)
     # set default values and save
@@ -329,6 +328,7 @@ gameCalc<-function(input,output,session,values){
 
   goToGameOver <- function(winning, reason) {
     print("goToGameOver Started")
+    CreateLeaderboardEntry(values$username,values$current_statistics$year,values$current_statistics$happiness,values$current_statistics$budget,values$current_statistics$population,values$current_statistics$homelessness,values$current_statistics$employment)
     if (!winning) {
       output$gameOverReason <- renderText({
         paste0("You lost because ", reason)
