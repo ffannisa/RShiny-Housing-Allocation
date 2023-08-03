@@ -1,6 +1,6 @@
 source("databaseFunctions.R")
 source("images.R")
-
+library(ggplot2)
 
 gameCalc<-function(input,output,session,values){
   #USE CASE 1 USER REGISTRATION
@@ -65,6 +65,8 @@ gameCalc<-function(input,output,session,values){
     }
   })
   
+  
+  #USE CASE 3 STRUCTURE SELECTION
   # receive input from drag and drop
   observeEvent(input$new_land_use,{
     print("new land use received")
@@ -81,6 +83,14 @@ gameCalc<-function(input,output,session,values){
       gridUpdater()
     }
   })
+  
+  # USE CASE 4 REVIEW GAME STATS
+  
+  output$population_graph <- renderPlot({
+    ggplot(data=iris,mapping = aes(x=Sepal.Length))+geom_area(mapping=aes(y=Sepal.Width,fill="red"))
+     # ggplot(values$current_statistics, aes(x =, y = mpg)) + geom_point()
+  })
+  
   
   
   #USE CASE 5 SELECTION CONFIRMATION
@@ -241,9 +251,11 @@ gameCalc<-function(input,output,session,values){
   
   # USE CASE 11 RESTART GAME
   observeEvent(input$restart,{
-    CreateLeaderboardEntry(values$username,values$current_statistics$year,values$current_statistics$happiness,values$current_statistics$budget,values$current_statistics$population,values$current_statistics$homelessness,values$current_statistics$employment)
+    # CreateLeaderboardEntry(values$username,values$current_statistics$year,values$current_statistics$happiness,values$current_statistics$budget,values$current_statistics$population,values$current_statistics$homelessness,values$current_statistics$employment)
+    
     restart(values)
   })
+  # observeEvent()
   
   restart<-function(values,refresh_grid=TRUE){
     print("restart started")

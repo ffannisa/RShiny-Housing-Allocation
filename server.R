@@ -274,11 +274,11 @@ uiGame <- fluidPage(
                  column(6, style = 'border: 1px solid lightgrey; border-radius: 25px; background-color: #FFFFFF;',
                         br(),
                         # ntitle and info button
-                        div(HTML('<b>Homelesness Graph</b> '), style = 'display: inline-block;'),
-                        uiOutput('sales_map_button', style = 'display: inline-block;'),
+                        div(HTML('<b>Population Graph</b> '), style = 'display: inline-block;'),
+                        uiOutput('population_button', style = 'display: inline-block;'),
                         br(), br(),
                         # map plot
-                        plotOutput('sales_map'),
+                        plotOutput('population_graph'),
                         br(), br(), br()
                  ),
                  
@@ -288,7 +288,7 @@ uiGame <- fluidPage(
                         fluidRow(style = 'border: 1px solid lightgrey; border-radius: 25px; margin-left: 10px; padding-left: 10px; background-color: #FFFFFF;',
                                  br(),
                                  # sales trend title and info button
-                                 div(HTML('<b>Employment Graph</b> '), style = 'display: inline-block;'),
+                                 div(HTML('<b>Happiness Graph</b> '), style = 'display: inline-block;'),
                                  uiOutput('sales_trend_button', style = 'display: inline-block;'),
                                  br(), br(),
                                  # trend plot
@@ -299,7 +299,7 @@ uiGame <- fluidPage(
                         fluidRow(style = 'border: 1px solid lightgrey; border-radius: 25px; margin-left: 10px; padding-left: 10px; background-color: #FFFFFF;',
                                  br(),
                                  # bar plot title and info button
-                                 div(HTML('<b>Happiness Index</b> '), style = 'display: inline-block;'),
+                                 div(HTML('<b>Finances</b> '), style = 'display: inline-block;'),
                                  uiOutput('bar_plot_button', style = 'display: inline-block;'),
                                  br(), br(),
                                  # bar plot
@@ -406,7 +406,7 @@ function(input, output, session) {
   # UI functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   
   get_remaining_lease_text <- function(remaining_lease) {
-    if (remaining_lease >= 0) {
+    if (remaining_lease > 0) {
       return(paste(remaining_lease, "years remaining"))
     } else {
       return("")
@@ -623,23 +623,27 @@ function(input, output, session) {
     valueBox(20, "box4")
   })
   
-  # Box 5: Happiness Index
+  # Box 5: Budget
   output$box_5 <- renderValueBox({
-    valueBox(values$current_statistics$happiness, "Happiness Index")
+    # not working
+    valueBox(values$current_statistics$happiness, "Budget chart")
   })
   
   ### USING TIDYVERSE: MAKE GRAPHS
   # sales map button
   # Hillman move graphs to gameCalc
   
-  output$sales_map_button <- renderUI({
-    actionButton('salesMapButton', NULL, icon = icon('info'), style = 'border-radius: 50%;')
+  output$population_graph_button <- renderUI({
+    # BUTTON NOT IMPLEMENTED
+    actionButton('populationGraphButton', NULL, icon = icon('info'), style = 'border-radius: 50%;')
   })
   
-  # sales map
-  output$sales_map = renderPlot({
-    ggplot(mtcars, aes(x = disp, y = mpg)) + geom_point()
+  observeEvent(input$populationGraphButton,{
+    print("POPULATION GRAPH BUTTON NOT IMPLEMENTED")
   })
+  
+  
+  
   
   # sales trend button
   output$sales_trend_button <- renderUI({
