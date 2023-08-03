@@ -46,7 +46,9 @@ fluidPage(
                  fluidRow(
                    column(width = 12, uiOutput("game_ui")), # uiOutput for game page
                    column(width = 12,
-                          actionButton("back_button", "Restart!", class = "nes-btn is-error bottomButton2", style= "width: 100%; font-family: 'Press Start 2P';")
+                          actionButton("restart", "Restart!", class = "nes-btn is-warning bottomButton2", style= "width: 30%; font-family: 'Press Start 2P';"),
+                          br(),
+                          actionButton("back_button", "Back to Login!", class = "nes-btn is-error bottomButton2", style= "width: 100%; font-family: 'Press Start 2P';")
                    )
                  )
              )

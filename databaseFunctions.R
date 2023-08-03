@@ -207,12 +207,13 @@ SaveCurrentLanduse <- function(data) {
     message <- "Data is empty. No records to save."
     return(message)
   }
-  
+  print("start delete")
   # First, delete any existing records for the given username
   username <- unique(data$username)
   query_delete <- sqlInterpolate(conn, "DELETE FROM current_land_use WHERE username = ?id1;", id1 = username)
   dbExecute(conn, query_delete)
   
+  print("start insert")
   # Then, insert the new records into the current_land_use table
   query_insert <- "INSERT INTO current_land_use (username, grid_number, type, remaining_lease) VALUES "
   for (i in 1:nrow(data)) {
@@ -272,40 +273,52 @@ removeStructure <- function(username, grid_number) {
 }
 
 # NEEDS SOME WORK HAHA
-RetrieveLeaderboard <- function(username) {
-  # Get the latest statistics for the given username
-  latest_stats <- findLatestStatistics(username)
-  
-  # Check if the latest_stats data frame is not empty
-  if (nrow(latest_stats) == 0) {
-    stop("No data found for the given username.")
-  }
-  
+RetrieveLeaderboard <- function(usernames) {
   # Connect to the database using the getAWSConnection function
   conn <- getAWSConnection()
   
-  # Prepare the query to insert data into the leaderboard table
+  # Prepare the query template to insert data into the leaderboard table
   query_template <- "INSERT INTO leaderboard (username, happiness, budget, population, homelessness, employment) VALUES ('%s', %d, %d, %d, %d, %d)"
   
-  # Iterate through the rows of the data frame and insert data into the leaderboard table
-  for (i in 1:nrow(latest_stats)) {
-    query <- sprintf(query_template,
-                     latest_stats$username[i],
-                     latest_stats$happiness[i],
-                     latest_stats$budget[i],
-                     latest_stats$population[i],
-                     latest_stats$homelessness[i],
-                     latest_stats$employment[i])
+  # Iterate through each username in the vector
+  for (username in usernames) {
+    # Get the latest statistics for the current username
+    latest_stats <- findLatestStatistics(username)
+    print(latest_stats)
     
-    # Execute the query to insert the data into the leaderboard table
-    dbExecute(conn, query)
+    # Check if the latest_stats data frame is not empty
+    if (nrow(latest_stats) == 0) {
+      # If there is no data for the current username, skip to the next username
+      cat(paste("No data found for username:", username, ". Skipping...\n"))
+      next
+    }
+    
+    
+    # Iterate through the rows of the data frame and insert data into the leaderboard table
+    for (i in 1:nrow(latest_stats)) {
+    
+      query <- sprintf(query_template,
+                       username = username,
+                       happiness = latest_stats$happiness[i],
+                       budget = latest_stats$budget[i],
+                       population = latest_stats$population[i],
+                       homelessness = latest_stats$homelessness[i],
+                       employment = latest_stats$employment[i]
+                       )
+      print(query)
+      
+      # Execute the query to insert the data into the leaderboard table
+      dbExecute(conn, query)
+    }
+    
+    cat(paste("Data for username:", username, "has been saved in the leaderboard table.\n"))
   }
   
   # Disconnect from the database
   dbDisconnect(conn)
   
   # Return the success message
-  message <- "Data has been saved successfully in the leaderboard table."
+  message <- "All data has been saved successfully in the leaderboard table."
   return(message)
 }
 
