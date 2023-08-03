@@ -38,6 +38,17 @@ loginModal <- function(failed = FALSE) {
   )
 }
 
+leaderboardModal <- function(failed = FALSE) {
+  choice<-c("happiness", "budget", "employment", "homelessness", "population")
+  names(choice)<-c("Happiness", "Budget", "Employment", "Homelessness", "Population")
+  modalDialog(
+    title = "Leaderboard",
+    selectInput("leaderboard_table", "Choose leaderboard:", choices = choice),
+    tableOutput(outputId = "leaderboard_table"),
+  )
+}
+
+
 dialogBox<- function(t="abababababa"){
   modalDialog(
     t,
@@ -58,5 +69,22 @@ demolishConfirm<- function(gridnumber,type,demolish_cost,demolish_time){
     )
   )
 }
+
+gameOverModal <- function(winning, reason = "") {
+  modalDialog(
+    title = "Game Over",
+    if (winning) {
+      "Congratulations, you've won the game!"
+    } else {
+      "Sorry, you've lost the game!"
+    },
+    verbatimTextOutput("gameOverReason"),  # This will display the game over reason
+    footer = tagList(
+      actionButton("end_game", "End Game", class="nes-btn is-error"),
+      actionButton("leaderboard", "Show Leaderboard", class="nes-btn is-warning")
+    )
+  )
+}
+
 
 
