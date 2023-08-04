@@ -1,13 +1,13 @@
 /* Add the background image */
 body {
-  background-image: url('/images/login_bg.png');
+  background-image: url('../images/login_bg.jpg');
   background-size: cover;
 }
 
 /* Center the game title */
 h1 {
   text-align: center;
-  color: white;
+  color: orange;
 }
 
 /* Custom styles for buttons */

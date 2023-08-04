@@ -19,21 +19,12 @@ uiLogin <- fluidPage(
   # Add font and Game design template to use -> Nes.css
   # Link the external CSS file and fonts
   tags$head(
-    tags$style(HTML("
-            body {
-                background: url('www/background1.jpeg') no-repeat center center fixed; 
-                -webkit-background-size: cover;
-                -moz-background-size: cover;
-                -o-background-size: cover;
-                background-size: cover;
-            }
-        ")),
     tags$link(href = "https://unpkg.com/nes.css@2.3.0/css/nes.min.css", rel = "stylesheet"),
     tags$link(href = "https://fonts.googleapis.com/css?family=Press+Start+2P", rel = "stylesheet")
   ),
   
   # Link the external CSS file
-  includeCSS("css/Login_style.css"),
+  includeCSS("www/css/Login_style.css"),
   
   # Center the game title "Housing Hustlers" with spacing
   tags$div(
@@ -83,7 +74,7 @@ uiGame <- fluidPage(
   ),
   
   # Link external CSS files -> reference: Grid garden game
-  includeCSS("css/Game_style.css"),
+  includeCSS("www/css/Game_style.css"),
   
   # Add tabsetPanel to create tabs
   tabsetPanel(
@@ -668,9 +659,9 @@ function(input, output, session) {
       # Display multiple pages in modal dialog
       tabsetPanel(
         id = 'information_tabs',
-        tabPanel("1", div(style = 'overflow-x: scroll', tags$img(src = image_info1, width=1440, height=540))),
-        tabPanel("2", div(style = 'overflow-x: scroll', tags$img(src = image_info2, width=1440, height=540))),
-        tabPanel("3", div(style = 'overflow-x: scroll', tags$img(src = image_info3, width=1440, height=540)))
+        tabPanel("1", div(style = 'overflow-x: scroll', tags$img(src = image_info1, width=850, height=540))),
+        tabPanel("2", div(style = 'overflow-x: scroll', tags$img(src = image_info2, width=850, height=540))),
+        tabPanel("3", div(style = 'overflow-x: scroll', tags$img(src = image_info3, width=850, height=540)))
       ),
       
       # Buttons to change pages
@@ -684,10 +675,12 @@ function(input, output, session) {
       
       # CSS to set the width of the modal
       tags$style(HTML("
-      .modal-dialog {
-        width: 90%;
-      }
-    "))
+    .modal-dialog {
+      width: 70%;
+    }
+  ")),
+      # Set the size of the modal to small
+      size = "s"
     ))
   })
   
