@@ -1,4 +1,6 @@
 library(shiny)
+#install.packages("shinyBS")
+library(shinyBS)
 source("databaseFunctions.R")
 source("templates.R")
 
@@ -84,6 +86,9 @@ uiGame <- fluidPage(
                br(),
                # 1st fluid row for value boxes
                fluidRow(
+                 div(# Action button to open modal dialog
+                   actionButton("information", "Info",  class = "nes-btn is-normal")),
+                 br(),
                  # Value Box 1
                  column(width = 3, 
                         div(outputId = "box_1", class = "custom-value-box1",
@@ -342,16 +347,28 @@ function(input, output, session) {
   source("images.R")
   images <- c(rep(image_empty, 25))
   
-  # Observer for instructions button
   observeEvent(input$show_instructions, {
     # Show modal dialog when button is clicked
     showModal(modalDialog(
       title = "Instructions",
       # Display image in modal dialog
-      tags$img(src = "images/instructions.png"),
-      easyClose = TRUE
+      div(style = 'overflow-x: scroll', tags$img(src = image_instruction , width=1440, height=540)),
+      
+      # Dismiss button
+      modalButton("Dismiss"),
+      
+      # CSS to set the width of the modal
+      footer = NULL,
+      size = "m",
+      tags$style(HTML("
+    .modal-dialog {
+      width: 90%;
+    }
+  "))
     ))
   })
+  
+  
   
   # define stored values !!! THIS DATA IS PLACEHOLDER FOR TESTING
   values <- reactiveValues(
@@ -622,10 +639,69 @@ function(input, output, session) {
     get_emoji(values$current_statistics$happiness)
   })
   
+  observe({
+    bsTooltip(id = "emoji_output", 
+              title = paste0("Happiness: ", as.character(values$current_statistics$happiness)), 
+              placement = "bottom", 
+              trigger = "hover")
+  })
+  
   # Output the emoji in the UI
   output$emoji_output <- renderText({
     emoji()
   })
+  
+  #### Information Sheet Pop-up
+  observeEvent(input$information, {
+    # Show modal dialog when button is clicked
+    showModal(modalDialog(
+      title = "Information",
+      # Display multiple pages in modal dialog
+      tabsetPanel(
+        id = 'information_tabs',
+        tabPanel("1", div(style = 'overflow-x: scroll', tags$img(src = image_info1, width=1440, height=540))),
+        tabPanel("2", div(style = 'overflow-x: scroll', tags$img(src = image_info2, width=1440, height=540))),
+        tabPanel("3", div(style = 'overflow-x: scroll', tags$img(src = image_info3, width=1440, height=540)))
+      ),
+      
+      # Buttons to change pages
+      footer = tagList(
+        actionButton("previnfo", "Previous"),
+        actionButton("nextinfo", "Next"),
+        # Dismiss button
+        modalButton("Dismiss")
+      ),
+      easyClose = TRUE,
+      
+      # CSS to set the width of the modal
+      tags$style(HTML("
+      .modal-dialog {
+        width: 90%;
+      }
+    "))
+    ))
+  })
+  
+  # Observer to manage page change
+  observeEvent(input$nextinfo, {
+    # Get current tab
+    current_tab <- as.numeric(input$information_tabs)
+    print(current_tab)
+    # If it's not the last tab, go to the next one
+    if(current_tab < 3) {
+      updateTabsetPanel(session, "information_tabs", selected = as.character(current_tab + 1))
+    }
+  })
+  
+  observeEvent(input$previnfo, {
+    # Get current tab
+    current_tab <- as.numeric(input$information_tabs)
+    # If it's not the first tab, go to the previous one
+    if(current_tab > 1) {
+      updateTabsetPanel(session, "information_tabs", selected = as.character(current_tab - 1))
+    }
+  })
+  ####
   
   # Add any server-side functionality here if needed
   
