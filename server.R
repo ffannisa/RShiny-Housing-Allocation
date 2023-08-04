@@ -1,6 +1,5 @@
-library(shiny)
-#install.packages("shinyBS")
-library(shinyBS)
+source("usePackages.R")
+loadPkgs(c("shiny","shinyBS"))
 source("databaseFunctions.R")
 source("templates.R")
 

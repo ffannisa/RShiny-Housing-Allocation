@@ -1,8 +1,5 @@
-library(shiny)
-library(shinydashboard)
-library(tidyverse)
-library(shinyWidgets)
-library(shinyjs)
+source("usePackages.R")
+loadPkgs(c("shiny","shinydashboard","tidyverse","shinyWidgets","shinyjs"))
 
 pageButtonUi <- function(id) {
   actionButton(NS(id, "page_change"), label = "Start Game!", class = "nes-btn is-success bottomButton1")

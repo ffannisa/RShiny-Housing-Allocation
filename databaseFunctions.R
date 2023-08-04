@@ -40,8 +40,9 @@
 # save game statistics -> 
  
 #retrieve leaderboard
+source("usePackages.R")
+loadPkgs(c("RMySQL"))
 
-library(RMySQL)
 
 checkExistingUsername <- function(username) {
   # Check if this username is already in use in the database

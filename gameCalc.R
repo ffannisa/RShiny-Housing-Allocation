@@ -1,6 +1,7 @@
 source("databaseFunctions.R")
 source("images.R")
-library(ggplot2)
+source("usePackages.R")
+loadPkgs(c("ggplot2"))
 
 gameCalc<-function(input,output,session,values){
   #USE CASE 1 USER REGISTRATION
