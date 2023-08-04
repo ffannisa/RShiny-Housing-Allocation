@@ -162,7 +162,7 @@ gameCalc<-function(input,output,session,values){
       progressBarUpdater()
       # increase values
       values$current_statistics$happiness<-7*values$current_statistics$happiness%/%10-10*values$current_statistics$homelessness+5*values$current_statistics$employment%/%10+50*sum(values$land_use$type=="park")
-      values$current_statistics$budget<-values$current_statistics$budget-100*values$current_statistics$population+200*values$current_statistics$employment+10000*sum(values$land_use$type=="office")
+      values$current_statistics$budget<-values$current_statistics$budget-100*values$current_statistics$population+1000*values$current_statistics$employment+50000*sum(values$land_use$type=="office")
       
       values$current_statistics$population<-values$current_statistics$population+values$current_statistics$population%/%10
       
