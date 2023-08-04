@@ -110,13 +110,15 @@ gameCalc<-function(input,output,session,values){
     # happy trend
     output$happy_trend_plot = renderPlot({
       # Generate a line chart with 'year' on the x-axis and 'happiness' on the y-axis
-      ggplot(game_data, aes(x = year, y = happiness)) + geom_line()
+      ggplot(game_data, aes(x = year, y = happiness)) + geom_line(color='darkgreen')+
+        scale_x_continuous(breaks = function(x) unique(floor(pretty(seq(0, max(x))))))
     })
     
     # budg bar
     output$budg_bar_plot = renderPlot({
       # Generate a bar chart with 'year' on the x-axis and 'budget' on the y-axis
-      ggplot(game_data, aes(x = year, y = budget)) + geom_bar(stat = 'identity')
+      ggplot(game_data, aes(x = year, y = budget)) + geom_bar(stat = 'identity', fill='pink')+
+        scale_x_continuous(breaks = function(x) unique(floor(pretty(seq(0, max(x))))))
     })
     
   }
