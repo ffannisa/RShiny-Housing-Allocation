@@ -342,16 +342,25 @@ function(input, output, session) {
   source("images.R")
   images <- c(rep(image_empty, 25))
   
-  # Observer for instructions button
   observeEvent(input$show_instructions, {
     # Show modal dialog when button is clicked
     showModal(modalDialog(
       title = "Instructions",
       # Display image in modal dialog
-      tags$img(src = "images/instructions.png"),
-      easyClose = TRUE
+      div(style = 'overflow-x: scroll', tags$img(src = image_instruction , width=960, height=540)),
+      easyClose = TRUE,
+      
+      # CSS to set the width of the modal
+      footer = NULL,
+      size = "m",
+      tags$style(HTML("
+      .modal-dialog {
+        width: 90%;
+      }
+    "))
     ))
   })
+  
   
   # define stored values !!! THIS DATA IS PLACEHOLDER FOR TESTING
   values <- reactiveValues(
@@ -680,7 +689,7 @@ function(input, output, session) {
     game_data <- FindGameHistory(values$username)
     
     # Generate a line chart with 'year' on the x-axis and 'happiness' on the y-axis
-    ggplot(game_data, aes(x = year, y = happiness)) + geom_line()
+    ggplot(game_data, aes(x = year, y = happiness)) + geom_line(color='darkgreen')
   })
   #####
   
@@ -696,7 +705,7 @@ function(input, output, session) {
     game_data <- FindGameHistory(values$username)
     
     # Generate a bar chart with 'year' on the x-axis and 'budget' on the y-axis
-    ggplot(game_data, aes(x = year, y = budget)) + geom_bar(stat = 'identity')
+    ggplot(game_data, aes(x = year, y = budget)) + geom_bar(stat = 'identity', fill='pink')
   })
   ######
   

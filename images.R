@@ -10,6 +10,7 @@ image_path9<-"images/house_3_transparent.png"
 image_path10<-"images/office_transparent.png"
 image_path11<-"images/park_transparent.png"
 image_path12<-"images/delete.png"
+image_path13<-"images/instruction.png"
 
 image_hdb1<-base64enc::dataURI(file=image_path1,mime="image/png")
 image_hdb2<-base64enc::dataURI(file=image_path2,mime="image/png")
@@ -23,5 +24,5 @@ image_planned_hdb2<-base64enc::dataURI(file=image_path9,mime="image/png")
 image_planned_office<-base64enc::dataURI(file=image_path10,mime="image/png")
 image_planned_park<-base64enc::dataURI(file=image_path11,mime="image/png")
 image_rubbish<-base64enc::dataURI(file=image_path12,mime="image/png")
-
+image_instruction<-base64enc::dataURI(file=image_path13,mime="image/png")
 
