@@ -44,6 +44,7 @@ leaderboardModal <- function(failed = FALSE) {
   
   modalDialog(
     title = "Leaderboard",
+    size=c("l"),
     selectInput("leaderboard_table", "Choose leaderboard:", choices = choice),
     
     # Wrap your table output in a div that allows for scrolling
