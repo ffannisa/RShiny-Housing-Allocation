@@ -384,7 +384,7 @@ function(input, output, session) {
   
   # Render Year Counter
   output$yearValue <- renderText({
-    values$current_statistics$year
+    paste0(values$current_statistics$year,"/999")
   })
   
   # Render dynamic budget
