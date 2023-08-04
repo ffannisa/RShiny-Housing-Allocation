@@ -19,6 +19,15 @@ uiLogin <- fluidPage(
   # Add font and Game design template to use -> Nes.css
   # Link the external CSS file and fonts
   tags$head(
+    tags$style(HTML("
+            body {
+                background: url('www/background1.jpeg') no-repeat center center fixed; 
+                -webkit-background-size: cover;
+                -moz-background-size: cover;
+                -o-background-size: cover;
+                background-size: cover;
+            }
+        ")),
     tags$link(href = "https://unpkg.com/nes.css@2.3.0/css/nes.min.css", rel = "stylesheet"),
     tags$link(href = "https://fonts.googleapis.com/css?family=Press+Start+2P", rel = "stylesheet")
   ),

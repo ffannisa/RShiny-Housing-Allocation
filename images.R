@@ -14,6 +14,7 @@ image_path13<-"images/instruction.png"
 image_path14<-"images/info_1.png"
 image_path15<-"images/info_2.png"
 image_path16<-"images/info_3.png"
+image_path17<-"www/background1.jpeg"
 
 image_hdb1<-base64enc::dataURI(file=image_path1,mime="image/png")
 image_hdb2<-base64enc::dataURI(file=image_path2,mime="image/png")
@@ -31,4 +32,5 @@ image_instruction<-base64enc::dataURI(file=image_path13,mime="image/png")
 image_info1<-base64enc::dataURI(file=image_path14,mime="image/png")
 image_info2<-base64enc::dataURI(file=image_path15,mime="image/png")
 image_info3<-base64enc::dataURI(file=image_path16,mime="image/png")
+image_bg<-base64enc::dataURI(file=image_path17,mime="image/jpeg")
 

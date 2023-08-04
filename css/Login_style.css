@@ -26,6 +26,6 @@ h1 {
 
 /* Add the background image */
 body {
-  background-image: url('images/Login_BG.jpg');
+  background-image: url('www/background1.jpeg');
   background-size: cover;
 }
