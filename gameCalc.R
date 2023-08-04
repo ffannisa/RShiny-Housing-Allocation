@@ -85,11 +85,41 @@ gameCalc<-function(input,output,session,values){
   })
   
   # USE CASE 4 REVIEW GAME STATS
-  
-  output$population_graph <- renderPlot({
-    ggplot(data=iris,mapping = aes(x=Sepal.Length))+geom_area(mapping=aes(y=Sepal.Width,fill="red"))
-     # ggplot(values$current_statistics, aes(x =, y = mpg)) + geom_point()
+  observeEvent(input$tabs,{
+    print(input$tabs)
+    if (input$tabs=="Show Statistics!"){
+      rerenderPlot(values$username)  
+    }
+    
   })
+  rerenderPlot<-function(username){
+    print("plot rerender started")
+    game_data<-FindGameHistory(values$username)
+    
+    # population graph
+    a2<-rbind(data.frame(year=game_data$year,population=game_data$population-game_data$homelessness,type="Housed Population"),
+              data.frame(year=game_data$year,population=game_data$population,type="Homeless Population"),
+              data.frame(year=game_data$year,population=game_data$employment,type="Employed Population")) 
+    a2$type<-factor(a2$type,c("Homeless Population","Housed Population","Employed Population"))
+    output$population_graph<-renderPlot({ggplot(data=a2,mapping = aes(x=year,y=population,fill=type))+
+      geom_area(position="identity")+
+      lims(x=c(1,NA),y=c(0,NA))+
+      scale_x_continuous(breaks = function(x) unique(floor(pretty(seq(0, max(x))))))+
+      labs(x="Year",y="Total Population",fill="Type")})
+    
+    # happy trend
+    output$happy_trend_plot = renderPlot({
+      # Generate a line chart with 'year' on the x-axis and 'happiness' on the y-axis
+      ggplot(game_data, aes(x = year, y = happiness)) + geom_line()
+    })
+    
+    # budg bar
+    output$budg_bar_plot = renderPlot({
+      # Generate a bar chart with 'year' on the x-axis and 'budget' on the y-axis
+      ggplot(game_data, aes(x = year, y = budget)) + geom_bar(stat = 'identity')
+    })
+    
+  }
   
   
   
@@ -129,7 +159,7 @@ gameCalc<-function(input,output,session,values){
       values$current_statistics$year<-values$current_statistics$year+1
       progressBarUpdater()
       # increase values
-      values$current_statistics$happiness<-7*values$current_statistics$happiness%/%10-10*values$current_statistics$homeless+5*values$current_statistics$employment%/%10+50*sum(values$land_use$type=="park")
+      values$current_statistics$happiness<-7*values$current_statistics$happiness%/%10-10*values$current_statistics$homelessness+5*values$current_statistics$employment%/%10+50*sum(values$land_use$type=="park")
       values$current_statistics$budget<-values$current_statistics$budget-100*values$current_statistics$population+200*values$current_statistics$employment+10000*sum(values$land_use$type=="office")
       
       values$current_statistics$population<-values$current_statistics$population+values$current_statistics$population%/%10
@@ -190,6 +220,14 @@ gameCalc<-function(input,output,session,values){
       }
     }
     
+  })
+  
+  # USE CASE 7 END GAME
+  # Navigate back to the login page and close the modal
+  observeEvent(input$end_game, {
+    removeModal(session)
+    # restart(values)
+    updateNavbarPage(session, "pages", "first page")
   })
   
   # USE CASE 10 DEMOLISH
@@ -262,9 +300,8 @@ gameCalc<-function(input,output,session,values){
     # clear historic data
     delete_historic_data(values$username)
     # set default values and save
-    showModal(dialogBox("please be reminded that budget is currently at 9999999999"))
     values$current_statistics<-data.frame(year=c(1),happiness=c(50),budget=c(999999),population=c(100),homelessness=c(0),employment=c(0))
-    values$land_use<-data.frame(grid_number=c(1:25),type=rep("empty",25),remaining_lease=rep(-1,25))
+    values$land_use<-data.frame(grid_number=c(1:25),type=c("hdb_1",rep("empty",24)),remaining_lease=c(3,rep(-1,24)))
     print(values$username)
     print(values$current_statistics)
     print(values$land_use)

@@ -595,6 +595,8 @@ function(input, output, session) {
   
   # Show leaderboardModal
   observeEvent(input$leaderboard, {
+    # rerender leaderboard table
+    output$leaderboard_table <- renderTable(sort_leaderboard(sort_by = input$leaderboard_table))
     showModal(leaderboardModal(failed = FALSE))
   })
   
@@ -603,7 +605,7 @@ function(input, output, session) {
   
   get_emoji <- function(happy_idx) {
     print(paste0("Happiness: ",happy_idx))
-    if (happy_idx >= 0 && happy_idx <= 25) {
+    if (happy_idx <= 25) {
       return("😡")  # Mad face emoji
     } else if (happy_idx > 25 && happy_idx <= 50) {
       return("😠")  # Upset face emoji
@@ -675,13 +677,7 @@ function(input, output, session) {
     actionButton('happyTrendButton', NULL, icon = icon('info'), style = 'border-radius: 50%;')
   })
   
-  output$happy_trend_plot = renderPlot({
-    # Get all the game statistics for the username
-    game_data <- FindGameHistory(values$username)
-    
-    # Generate a line chart with 'year' on the x-axis and 'happiness' on the y-axis
-    ggplot(game_data, aes(x = year, y = happiness)) + geom_line()
-  })
+  
   #####
   
   ##### Budget Bar Plot
@@ -690,24 +686,13 @@ function(input, output, session) {
     actionButton('budgPlotButton', NULL, icon = icon('info'), style = 'border-radius: 50%;')
   })
   
-  # bar plot
-  output$budg_bar_plot = renderPlot({
-    # Get all the game statistics for the username
-    game_data <- FindGameHistory(values$username)
-    
-    # Generate a bar chart with 'year' on the x-axis and 'budget' on the y-axis
-    ggplot(game_data, aes(x = year, y = budget)) + geom_bar(stat = 'identity')
-  })
+  
   ######
   
   # Game calculation functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   source("gameCalc.R")
   gameCalc(input, output, session, values)
   
-  # Navigate back to the login page and close the modal
-  observeEvent(input$end_game, {
-    removeModal(session)
-    updateNavbarPage(session, "pages", "first page")
-  })
+  
   
 }
